@@ -1,0 +1,3 @@
+- the validator's one-sentence specification of ManualChecks.md is now a pointer at core's manual-checks skill
+- what stays here is the measuring: when a check is deferred, and the invocation that settles a case in this ecosystem
+- requires spine-toolkit 1.3.0, which is where that skill lives

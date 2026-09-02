@@ -2,6 +2,12 @@
 # What state is the family in? Read-only.
 . "$(dirname -- "${BASH_SOURCE[0]}")/lib.sh"
 
+case "${1:-}" in
+  -h|--help) sed -n '2p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'; echo "usage: $(basename "${BASH_SOURCE[0]}")"; exit 0 ;;
+  "") ;;
+  *) echo "error: $(basename "${BASH_SOURCE[0]}") takes no arguments" >&2; exit 2 ;;
+esac
+
 row() {
   local name="$1" dir="$2" ver="$3"
   printf '%-16s %-8s %-7s %-9s %-8s %s\n' \

@@ -1,0 +1,8 @@
+- manual-checks: a skill of core's own for the shape of ManualChecks.md, the one artifact a person executes
+- the artifact is produced in two stages: Plan enumerates what automation cannot check under ## Manual acceptance, Validation turns that list into cases
+- a case carries What it checks / Scene / Steps / By eye / By instrument / Failure looks like, and an instrument's command is written once in ## Reading the verdict rather than repeated per case
+- Review reads the result: a case a person cannot execute as written is an ordinary finding
+- the form belongs to core now, not to a platform plugin; docs/building-a-platform.md says so and reserves the skill name
+- tests/foundation/lib/manual-checks.test.bats holds the two execution forms in parity, 21 checks
+- project-config.test.bats enumerates through git instead of walking the tree, so scratch beside the code no longer reddens it
+- a project that never asks for a hand-run script is unaffected: manual_checks still decides whether the file appears at all

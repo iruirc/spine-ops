@@ -2,6 +2,12 @@
 # The invariants nobody was checking. Read-only; exits 1 on any breach.
 . "$(dirname -- "${BASH_SOURCE[0]}")/lib.sh"
 
+case "${1:-}" in
+  -h|--help) sed -n '2p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'; echo "usage: $(basename "${BASH_SOURCE[0]}")"; exit 0 ;;
+  "") ;;
+  *) echo "error: $(basename "${BASH_SOURCE[0]}") takes no arguments" >&2; exit 2 ;;
+esac
+
 fail=0
 bad() { echo "FAIL  $*"; fail=1; }
 good() { echo "ok    $*"; }

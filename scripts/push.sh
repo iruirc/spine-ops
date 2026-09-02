@@ -7,7 +7,12 @@
 . "$(dirname -- "${BASH_SOURCE[0]}")/lib.sh"
 
 DRY=0
-[ "${1:-}" != "--dry-run" ] || DRY=1
+case "${1:-}" in
+  -h|--help) sed -n '2,7p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'; exit 0 ;;
+  --dry-run) DRY=1 ;;
+  "") ;;
+  *) echo "error: unrecognized argument '$1'" >&2; exit 2 ;;
+esac
 
 send() {
   local label="$1" dir="$2" br ahead tags

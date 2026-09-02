@@ -23,14 +23,48 @@ itself**. Which plugins exist is not written here — it is read from the market
 `marketplace.json`. Two rosters would drift, and the drift `check.sh` found on its first run is what
 that looks like.
 
+## First run on a machine
+
+Clone all four as siblings; `repos.json` addresses the others relatively, so nothing else needs
+configuring. `jq` and `python3` are the only requirements.
+
+```
+git clone git@github.com:iruirc/spine-ops.git
+scripts/check.sh          # says at once whether the layout is right
+```
+
 ## Commands
 
-| | |
-|---|---|
-| `scripts/status.sh` | one table: version, highest tag, branch, ahead/behind, tree, and unreleased commits |
-| `scripts/check.sh` | the invariants nobody was checking — exits 1 on a breach |
-| `scripts/release.sh` | bump, commit, tag. Stops there |
-| `scripts/push.sh` | publish what release prepared, `--dry-run` to look first |
+Every command takes `-h`. The two read-only ones take nothing else.
+
+| | | |
+|---|---|---|
+| `scripts/status.sh` | — | one table: version, highest tag, branch, ahead/behind, tree, and unreleased commits |
+| `scripts/check.sh` | — | the invariants nobody was checking. Exit 0 clean, 1 on a breach — the one to run in a hook or before a release |
+| `scripts/release.sh` | `<targets…> [--dry-run]` | bump, commit, tag. Stops there. Exit 2 means the release notes are missing and names them |
+| `scripts/push.sh` | `[--dry-run]` | publish what release prepared: commits and tags, per repository |
+
+Two files under `scripts/` are not commands:
+
+- `lib.sh` — sourced by all four: the config, the roster, semver, the git guards. Never executed.
+- `set-version.py` — rewrites one `"version"` line in place. A `jq` round-trip would reformat these
+  manifests, and a release diff has to show one changed line rather than a reflow. Called by
+  `release.sh`; usable alone as `set-version.py FILE 1.4.0 [--plugin NAME]`.
+
+## repos.json
+
+```json
+{
+  "marketplace": { "path": "../claude-marketplace" },
+  "checkouts": {
+    "spine-toolkit": { "path": "../spine-toolkit", "verify": "scripts/test-foundation.sh" }
+  }
+}
+```
+
+`path` is relative to this repository. `verify` runs from the checkout's own root and must exit 0
+for that plugin to be released; leave it out and the release says the plugin was not verified rather
+than pretending it was. Which plugins exist is not written here — see above.
 
 ## Releasing
 
@@ -39,6 +73,7 @@ scripts/release.sh minor                        every repo with work since its l
 scripts/release.sh minor swift-platform=patch   same, one overridden
 scripts/release.sh spine-toolkit=minor          only that one
 scripts/release.sh spine-toolkit=1.3.0          an explicit version
+scripts/release.sh minor --dry-run              the plan, the guards, and nothing else
 ```
 
 The marketplace is never released alone and never skipped: any plugin bump rewrites its listing, so
