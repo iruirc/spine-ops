@@ -1,5 +1,8 @@
 # spine-ops
 
+[![license](https://img.shields.io/github/license/iruirc/spine-ops?color=555)](LICENSE)
+[![last commit](https://img.shields.io/github/last-commit/iruirc/spine-ops?label=last%20commit&color=888)](https://github.com/iruirc/spine-ops/commits/main)
+
 Maintenance for the `spine-toolkit` family: the plugins, and the marketplace that lists them.
 
 | Repository | Released | License | Last commit | What it is |
@@ -12,8 +15,9 @@ Those badges read the remote, so they say what is **published**. `scripts/status
 and says what is **here** — the two disagree exactly while something is committed and not yet pushed,
 which is the window `scripts/push.sh` closes.
 
-This repository is private and carries no badge of its own: nothing here is published, and the
-version numbers that matter are the three above.
+It carries no version and no tags of its own: it releases the three above rather than itself. What
+it keeps instead is `notes/`, where the body of every release it has written stays after the commit
+that used it.
 
 It lives outside all three because it must name all three. `spine-toolkit` cannot host it — its own
 suite forbids core naming a sibling tree by filesystem path — and `claude-marketplace` is a public
