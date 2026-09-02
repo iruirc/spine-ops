@@ -1,0 +1,7 @@
+{
+  "marketplace": { "path": "../claude-marketplace" },
+  "checkouts": {
+    "spine-toolkit":  { "path": "../spine-toolkit",  "verify": "scripts/test-foundation.sh" },
+    "swift-platform": { "path": "../swift-platform", "verify": "scripts/test-foundation.sh" }
+  }
+}
