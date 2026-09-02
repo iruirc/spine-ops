@@ -42,7 +42,7 @@ kind_rank() { case "$1" in patch) echo 1 ;; minor) echo 2 ;; major) echo 3 ;; *)
 resolve_target() {  # name current_version -> "to<TAB>kind"
   local name="$1" cur="$2" want; want="$(explicit_for "$name")"
   [ -n "$want" ] || want="$DEFAULT_KIND"
-  if is_semver "$want"; then echo "$want	explicit"
+  if is_semver "$want"; then echo "$want	$(kind_between "$cur" "$want")"
   else echo "$(bump "$cur" "$want")	$want"; fi
 }
 
@@ -85,7 +85,7 @@ while IFS=$'\t' read -r name dir from to kind n; do
   [ -n "$name" ] || continue
   printf '  %-16s %-7s -> %-7s %-6s %s commit(s)  notes/%s-%s.md\n' "$name" "$from" "$to" "$kind" "$n" "$name" "$to"
 done <<<"$PLAN"
-printf '  %-16s %-7s -> %-7s %-6s (body generated)\n' marketplace "$mp_cur" "$mp_to" "$mp_want"
+printf '  %-16s %-7s -> %-7s %-6s (body generated)\n' marketplace "$mp_cur" "$mp_to" "$(kind_between "$mp_cur" "$mp_to")"
 echo
 
 # --- guards, before anything is touched ------------------------------------

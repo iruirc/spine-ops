@@ -95,8 +95,9 @@ scripts/release.sh minor --dry-run              the plan, the guards, and nothin
 
 The marketplace is never released alone and never skipped: any plugin bump rewrites its listing, so
 it goes along at the highest increment of the release unless `marketplace=<kind|version>` says
-otherwise. An explicit plugin version carries no increment, so the marketplace defaults to `patch`
-there — name it yourself when that is wrong.
+otherwise. A version named outright is measured against the current one for its increment, so
+`spine-toolkit=1.4.0` and `spine-toolkit=minor` reach the same marketplace version — how you spell a
+release never changes where it lands.
 
 **The release body of each plugin is a file**, `notes/<plugin>-<version>.md`. Its path depends on the
 version, which the increment only decides at run time — so the first run prints the plan and the

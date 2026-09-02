@@ -76,6 +76,20 @@ bump() {
   esac
 }
 
+# The increment an explicit version amounts to. A named version carries no word
+# for its size, and without deriving one the marketplace has no signal and falls
+# to patch — so the same release lands differently depending on whether it was
+# spelled `minor` or `1.4.0`.
+kind_between() {
+  local amaj amin apat bmaj bmin bpat
+  is_semver "$1" && is_semver "$2" || die "cannot compare '$1' and '$2': not both semver"
+  IFS=. read -r amaj amin apat <<<"$1"
+  IFS=. read -r bmaj bmin bpat <<<"$2"
+  if [ "$bmaj" -ne "$amaj" ]; then echo major
+  elif [ "$bmin" -ne "$amin" ]; then echo minor
+  else echo patch; fi
+}
+
 semver_gt() {
   [ "$1" != "$2" ] || return 1
   [ "$(printf '%s\n%s\n' "$1" "$2" | sort -t. -k1,1n -k2,2n -k3,3n | tail -1)" = "$1" ]
