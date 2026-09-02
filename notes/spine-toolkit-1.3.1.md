@@ -1,0 +1,3 @@
+- Review reads Plan.md ## Manual acceptance as well, so a plan that skipped it is caught even on a run that wrote no ManualChecks.md
+- conventions/task-scale.md no longer claims every line ceiling lives in the lint: an artifact as long as the work is - a block per commit, a case per check - is budgeted per unit in the skill that governs it
+- README carries release, licence and marketplace badges
