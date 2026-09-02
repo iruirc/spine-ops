@@ -60,6 +60,12 @@ Every command takes `-h`. The two read-only ones take nothing else.
 | `scripts/check.sh` | — | the invariants nobody was checking. Exit 0 clean, 1 on a breach — the one to run in a hook or before a release |
 | `scripts/release.sh` | `<targets…> [--dry-run]` | bump, commit, tag. Stops there. Exit 2 means the release notes are missing and names them |
 | `scripts/push.sh` | `[--dry-run]` | publish what release prepared: commits and tags, per repository |
+| `scripts/test.sh` | — | the suite under `tests/`, `bats-core` required |
+
+`tests/` covers the part of this repository where a wrong answer is silent — the semver arithmetic
+that decides which version a release lands on, and the reading of tags it decides from. A textual
+comparison would put `1.10.0` below `1.9.0` and refuse a release for not being above a version it is
+plainly above; that is what the suite is for, not coverage.
 
 Two files under `scripts/` are not commands:
 
