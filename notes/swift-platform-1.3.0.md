@@ -1,0 +1,6 @@
+- declares `spine-toolkit >=1.3.0 <2` in the object form; the bare string passed the host's install closure and set no constraint at all
+- the floor is 1.3.0 because the validator has delegated the ManualChecks.md form to core's manual-checks skill since 1.2.0, and that skill does not exist before it
+- a core below the floor no longer loads this plugin quietly: the host demotes it and names the range it wanted
+- 41 references to core's skills are written `spine-toolkit:<skill>`, so a bare backticked name now means one of this plugin's own
+- agents' `## Skills Reference` is split into `(core)` and `(swift-platform)` wherever it listed both under the platform's name
+- core's lint-core-refs.sh is vendored as a sixth adapted fork and the suite runs it against this tree

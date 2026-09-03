@@ -1,0 +1,10 @@
+- lint-core-refs.sh: checks the core skills a platform names against the version floor that platform itself declares
+- two rules — every `spine-toolkit:<skill>` resolves at the floor, and a hyphenated core skill name is never written bare
+- the floor is read from the platform's own plugin.json, so a string-form dependency declares none and that is the first violation
+- `--core` is required, and an explicit `--ref` that resolves nowhere exits 2: a run that compared nothing must not report success
+- against a plain directory, or a floor with no tag, the check degrades to what is there and says so in its own output
+- the contract now states both rules: the object dependency form with a semver range, and the namespaced form for core's skills
+- it also states what the lint does not reach — only `<plugin>/agents` and `<plugin>/skills`, and never a single-word core skill written bare
+- an unsatisfied range is not a warning, the host demotes the plugin, so a major of core takes every platform off the loader at once
+- the fixture platform carries the object form and namespaced references; it is what the 18 new tests run against
+- docs/building-a-platform.md and the README stopped teaching the string form they had shown since 1.0.0
