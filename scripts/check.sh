@@ -59,17 +59,21 @@ done < <(plugin_names)
 
 # 6. A platform may only name core skills that exist in the oldest core its own
 #    dependency range admits. The floor is declared once and then nothing holds
-#    it: this is what holds it.
+#    it: this is what holds it. The lint exits 0 when it could not reach the
+#    floor's tag and says so in its output, so a pass has to be read, not assumed.
 core_dir="$(checkout_path spine-toolkit)"
 while IFS= read -r n; do
   [ "$n" != "spine-toolkit" ] || continue
   d="$(checkout_path "$n")"
   [ -f "$d/.claude-plugin/plugin.json" ] || continue
-  if out="$("$core_dir/scripts/lint-core-refs.sh" "$d" --core "$core_dir" 2>&1)"; then
-    good "$n names only core skills its floor has"
-  else
-    bad "$n names core skills its declared floor does not have"
+  if ! out="$("$core_dir/scripts/lint-core-refs.sh" "$d" --core "$core_dir" 2>&1)"; then
+    bad "$n names core skills its declared floor does not have, or declares no floor"
     echo "$out" | sed 's/^/      /'
+  elif [[ "$out" == *"NOT the declared floor"* ]]; then
+    bad "$n was not checked against its declared floor: it does not resolve in $core_dir"
+    echo "$out" | sed 's/^/      /'
+  else
+    good "$n names only core skills its floor has"
   fi
 done < <(plugin_names)
 
