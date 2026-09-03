@@ -57,4 +57,20 @@ while IFS= read -r n; do
   [ "$own" = "$n" ] || bad "checkout at $d calls itself '$own', the marketplace calls it '$n'"
 done < <(plugin_names)
 
+# 6. A platform may only name core skills that exist in the oldest core its own
+#    dependency range admits. The floor is declared once and then nothing holds
+#    it: this is what holds it.
+core_dir="$(checkout_path spine-toolkit)"
+while IFS= read -r n; do
+  [ "$n" != "spine-toolkit" ] || continue
+  d="$(checkout_path "$n")"
+  [ -f "$d/.claude-plugin/plugin.json" ] || continue
+  if out="$("$core_dir/scripts/lint-core-refs.sh" "$d" --core "$core_dir" 2>&1)"; then
+    good "$n names only core skills its floor has"
+  else
+    bad "$n names core skills its declared floor does not have"
+    echo "$out" | sed 's/^/      /'
+  fi
+done < <(plugin_names)
+
 exit "$fail"
