@@ -1,0 +1,13 @@
+- docs-route.sh: routes a change set to the documentation components a project declares, and holds a phase open until the question each touched one raises is answered
+- a component is a named unit — a genre (`state` for how it works now, `tracker` for what was done and in what order), the `places` its files live in, and either the `covers` it describes or the `fed_by` task folders it aggregates
+- the registry is assembled from the project's `DocsMap.md` and one at every external package checkout, so a package declares its documentation once, at the package, and every project holding it reads that same record
+- `## Paths` → `External packages` had been in the config template since it was written and was read by nothing; it now names those checkouts
+- `reorigin` rewrites a diff taken inside a checkout into the project root's language — without it one phase cannot touch code in one repository and its documentation in another, which is the case this exists for
+- Applicable / N/A (reason) / Pending, the vocabulary `ops-checklist` already uses: what holds a phase open is the unanswered question, never the unwritten document, and `N/A` with a reason closes it
+- `blocking` degrades to `advisory` when a component's places cannot be written from where the work is happening, and says so; `## Scale` is never read — the floor is identical at both values
+- a tracker regenerates between its `spine:steps` markers from the task folders its `fed_by` matches; everything outside them is handwritten and never touched, and a malformed marker pair is refused rather than reshaped
+- `audit` names a component none of whose coverage shares a repository with its places, and files created outside every `covers` — both advisory, neither stops anything
+- `## Docs` carries `enabled`, `map`, `strictness` and `freshness`; a single task overrides with `[DOCS]` and names what it creates in `[DOCS_NEW]`, and an explicit task value wins in either direction
+- the note that carries this into a run is conditional on there being something to route, so a project that declares nothing carries none of it in any agent's context
+- setup stops offering the `Docs/{architecture,api,guides,notes}` scaffold and offers the registry instead: that nesting is a reader-need axis, this mechanism is a lifecycle one, and two unconnected notions of documentation in one toolkit is worse than either alone
+- 80 new tests; matching is path and glob comparison only, so `conventions/platform-contract.md` and the fixture platform are untouched
