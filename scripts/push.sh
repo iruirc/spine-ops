@@ -31,3 +31,6 @@ send() {
 echo "push:"
 while IFS= read -r n; do send "$n" "$(checkout_path "$n")"; done < <(plugin_names)
 send marketplace "$(marketplace_path)"
+# Not a plugin and never tagged, but it holds the notes the tags are described
+# by: left behind, a published release explains itself nowhere.
+send spine-ops "$OPS_ROOT"

@@ -96,6 +96,7 @@ while IFS=$'\t' read -r name dir from to kind n; do
   guard_release_ready "$name" "$dir"; note "$name: on main, clean, not behind"
 done <<<"$PLAN"
 guard_release_ready marketplace "$mp"; note "marketplace: on main, clean, not behind"
+guard_release_ready "spine-ops (release notes)" "$OPS_ROOT"; note "spine-ops: on main, clean, not behind"
 
 missing=""
 while IFS=$'\t' read -r name dir from to kind n; do
@@ -108,7 +109,7 @@ if [ -n "$missing" ]; then
   echo
   echo "the release body for each plugin is a file, and these are missing or empty:"
   printf '%s' "$missing"
-  echo "write them, then run the same command again."
+  echo "write them, commit them, then run the same command again."
   [ "$DRY" -eq 1 ] || exit 2
 else
   note "release notes present for every plugin"
