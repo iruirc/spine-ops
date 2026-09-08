@@ -1,0 +1,3 @@
+- the documentation genre `tracker` is now `progress`: `genre: progress` in a `DocsMap.md`, the subcommand `docs-route.sh progress <project-root>`, and the Done step named the same on all three surfaces that describe it — the profile preludes, the `## 2b` section of every workflow skill, and the `docs-route` table
+- no alias and no migration: a registry that still declares `genre: tracker` is a format error and `registry` exits 2, so the projects that have one edit it by hand
+- the name was inherited from a reference file's self-description while the files themselves are named `*-Progress.md`, and `tracker` is needed for the external issue tracker the connector work introduces
