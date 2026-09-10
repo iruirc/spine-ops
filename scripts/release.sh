@@ -3,7 +3,7 @@
 # is not withdrawn quietly.
 #
 #   release.sh minor                        every repo with work since its last tag
-#   release.sh minor swift-platform=patch   same, one overridden
+#   release.sh minor spine-platform-swift=patch   same, one overridden
 #   release.sh spine-toolkit=minor          only that one
 #   release.sh spine-toolkit=1.3.0          an explicit version, when a bump is not what you mean
 #

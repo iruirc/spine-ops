@@ -8,7 +8,7 @@ Maintenance for the `spine-toolkit` family: the plugins, and the marketplace tha
 | Repository | Released | License | Last commit | What it is |
 |---|---|---|---|---|
 | [**spine-toolkit**](https://github.com/iruirc/spine-toolkit) | [![](https://img.shields.io/github/v/tag/iruirc/spine-toolkit?sort=semver&label=&color=0969da)](https://github.com/iruirc/spine-toolkit/tags) | ![](https://img.shields.io/github/license/iruirc/spine-toolkit?label=&color=555) | ![](https://img.shields.io/github/last-commit/iruirc/spine-toolkit?label=&color=888) | the orchestrator, and no language of its own |
-| [**swift-platform**](https://github.com/iruirc/swift-platform) | [![](https://img.shields.io/github/v/tag/iruirc/swift-platform?sort=semver&label=&color=0969da)](https://github.com/iruirc/swift-platform/tags) | ![](https://img.shields.io/github/license/iruirc/swift-platform?label=&color=555) | ![](https://img.shields.io/github/last-commit/iruirc/swift-platform?label=&color=888) | Swift and Apple knowledge, nine agents, the manifest core dispatches through |
+| [**spine-platform-swift**](https://github.com/iruirc/spine-platform-swift) | [![](https://img.shields.io/github/v/tag/iruirc/spine-platform-swift?sort=semver&label=&color=0969da)](https://github.com/iruirc/spine-platform-swift/tags) | ![](https://img.shields.io/github/license/iruirc/spine-platform-swift?label=&color=555) | ![](https://img.shields.io/github/last-commit/iruirc/spine-platform-swift?label=&color=888) | Swift and Apple knowledge, nine agents, the manifest core dispatches through |
 | [**claude-marketplace**](https://github.com/iruirc/claude-marketplace) | [![](https://img.shields.io/github/v/tag/iruirc/claude-marketplace?sort=semver&label=&color=0969da)](https://github.com/iruirc/claude-marketplace/tags) | ![](https://img.shields.io/github/license/iruirc/claude-marketplace?label=&color=555) | ![](https://img.shields.io/github/last-commit/iruirc/claude-marketplace?label=&color=888) | the catalogue users add, and the only roster of what exists |
 
 Those badges read the remote, so they say what is **published**. `scripts/status.sh` reads this disk
@@ -31,7 +31,7 @@ All repositories are siblings:
 spine/
   claude-marketplace/
   spine-toolkit/
-  swift-platform/
+  spine-platform-swift/
   spine-ops/          <- here
 ```
 
@@ -93,7 +93,7 @@ than pretending it was. Which plugins exist is not written here — see above.
 
 ```
 scripts/release.sh minor                        every repo with work since its last tag
-scripts/release.sh minor swift-platform=patch   same, one overridden
+scripts/release.sh minor spine-platform-swift=patch   same, one overridden
 scripts/release.sh spine-toolkit=minor          only that one
 scripts/release.sh spine-toolkit=1.3.0          an explicit version
 scripts/release.sh minor --dry-run              the plan, the guards, and nothing else

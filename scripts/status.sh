@@ -10,13 +10,13 @@ esac
 
 row() {
   local name="$1" dir="$2" ver="$3"
-  printf '%-16s %-8s %-7s %-9s %-8s %s\n' \
+  printf '%-22s %-8s %-7s %-9s %-8s %s\n' \
     "$name" "$ver" "$(latest_tag "$dir" || echo -)" \
     "$(current_branch "$dir")" "$(ahead_behind "$dir")" \
     "$(is_clean "$dir" && echo clean || echo DIRTY)"
 }
 
-printf '%-16s %-8s %-7s %-9s %-8s %s\n' REPO VERSION TAG BRANCH AH/BE TREE
+printf '%-22s %-8s %-7s %-9s %-8s %s\n' REPO VERSION TAG BRANCH AH/BE TREE
 mp="$(marketplace_path)"
 row marketplace "$mp" "$(marketplace_version)"
 while IFS= read -r n; do
