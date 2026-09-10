@@ -9,13 +9,16 @@ Maintenance for the `spine-toolkit` family: the plugins, and the marketplace tha
 |---|---|---|---|---|
 | [**spine-toolkit**](https://github.com/iruirc/spine-toolkit) | [![](https://img.shields.io/github/v/tag/iruirc/spine-toolkit?sort=semver&label=&color=0969da)](https://github.com/iruirc/spine-toolkit/tags) | ![](https://img.shields.io/github/license/iruirc/spine-toolkit?label=&color=555) | ![](https://img.shields.io/github/last-commit/iruirc/spine-toolkit?label=&color=888) | the orchestrator, and no language of its own |
 | [**spine-platform-swift**](https://github.com/iruirc/spine-platform-swift) | [![](https://img.shields.io/github/v/tag/iruirc/spine-platform-swift?sort=semver&label=&color=0969da)](https://github.com/iruirc/spine-platform-swift/tags) | ![](https://img.shields.io/github/license/iruirc/spine-platform-swift?label=&color=555) | ![](https://img.shields.io/github/last-commit/iruirc/spine-platform-swift?label=&color=888) | Swift and Apple knowledge, nine agents, the manifest core dispatches through |
+| [**spine-platform-kotlin**](https://github.com/iruirc/spine-platform-kotlin) | [![](https://img.shields.io/github/v/tag/iruirc/spine-platform-kotlin?sort=semver&label=&color=0969da)](https://github.com/iruirc/spine-platform-kotlin/tags) | ![](https://img.shields.io/github/license/iruirc/spine-platform-kotlin?label=&color=555) | ![](https://img.shields.io/github/last-commit/iruirc/spine-platform-kotlin?label=&color=888) | Kotlin knowledge across Android, Compose Desktop, JVM servers and KMP |
+| [**spine-driver-mobile**](https://github.com/iruirc/spine-driver-mobile) | [![](https://img.shields.io/github/v/tag/iruirc/spine-driver-mobile?sort=semver&label=&color=0969da)](https://github.com/iruirc/spine-driver-mobile/tags) | ![](https://img.shields.io/github/license/iruirc/spine-driver-mobile?label=&color=555) | ![](https://img.shields.io/github/last-commit/iruirc/spine-driver-mobile?label=&color=888) | adapter declaring what the `mcp-devices` server drives, per surface |
+| [**spine-driver-agent-device**](https://github.com/iruirc/spine-driver-agent-device) | [![](https://img.shields.io/github/v/tag/iruirc/spine-driver-agent-device?sort=semver&label=&color=0969da)](https://github.com/iruirc/spine-driver-agent-device/tags) | ![](https://img.shields.io/github/license/iruirc/spine-driver-agent-device?label=&color=555) | ![](https://img.shields.io/github/last-commit/iruirc/spine-driver-agent-device?label=&color=888) | the same for `callstack/agent-device` |
 | [**claude-marketplace**](https://github.com/iruirc/claude-marketplace) | [![](https://img.shields.io/github/v/tag/iruirc/claude-marketplace?sort=semver&label=&color=0969da)](https://github.com/iruirc/claude-marketplace/tags) | ![](https://img.shields.io/github/license/iruirc/claude-marketplace?label=&color=555) | ![](https://img.shields.io/github/last-commit/iruirc/claude-marketplace?label=&color=888) | the catalogue users add, and the only roster of what exists |
 
 Those badges read the remote, so they say what is **published**. `scripts/status.sh` reads this disk
 and says what is **here** — the two disagree exactly while something is committed and not yet pushed,
 which is the window `scripts/push.sh` closes.
 
-It carries no version and no tags of its own: it releases the three above rather than itself. What
+It carries no version and no tags of its own: it releases the five above rather than itself. What
 it keeps instead is `notes/`, where the body of every release it has written stays after the commit
 that used it.
 
