@@ -1,0 +1,2 @@
+- the self-containment guard names the sibling platform tree `spine-platform-swift`, its name since 1.5.0; with the old one in the pattern a path to `../spine-platform-swift` passed straight through
+- no change to the plugin's own surface: same agents, same manifest, same skills
