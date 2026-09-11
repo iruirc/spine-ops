@@ -74,3 +74,41 @@ changed_lines() { diff <(printf '%s\n' "$1") "$MANIFEST" | grep -c '^>' || true;
   [ "$status" -ne 0 ]
   [ "$(cat "$MANIFEST")" = "$before" ]
 }
+
+# A plugin can quote its own version as a dependency floor in files a release has
+# to move with it — a reference copy of that line in a doc or a fixture.
+@test "a plugin's own floor is rewritten on every line that quotes it, and nowhere else" {
+  FLOORS="$WORK/driver.md"
+  cat > "$FLOORS" <<'MD'
+One line of plugin.json:
+
+    { "name": "core", "version": ">=1.7.3 <2" },
+    { "name": "other", "version": ">=1.7.3 <2" }
+
+and the same line again, in prose: `{ "name": "core", "version": ">=1.7.3 <2" }`.
+MD
+  "$SET" "$FLOORS" 1.8.0 --floor core
+  [ "$(grep -c '"name": "core", "version": ">=1.8.0 <2"' "$FLOORS" || true)" -eq 2 ]
+  [ "$(grep -c '"name": "core", "version": ">=1.7.3' "$FLOORS" || true)" -eq 0 ]
+  grep -q '"name": "other", "version": ">=1.7.3 <2"' "$FLOORS"
+}
+
+@test "a major release moves the floor's upper bound with it" {
+  FLOORS="$WORK/plugin.json"
+  printf '{\n  "dependencies": [ { "name": "core", "version": ">=1.9.0 <2" } ]\n}\n' > "$FLOORS"
+  "$SET" "$FLOORS" 2.0.0 --floor core
+  [ "$(jq -r '.dependencies[0].version' "$FLOORS")" = ">=2.0.0 <3" ]
+}
+
+@test "a file that quotes no floor for that plugin is refused, and nothing is written" {
+  # The control proves --floor is understood at all; without it, a usage error on
+  # an unknown flag would pass for the refusal.
+  printf '{ "dependencies": [ { "name": "core", "version": ">=1.0.0 <2" } ] }\n' > "$WORK/control.json"
+  "$SET" "$WORK/control.json" 1.8.0 --floor core
+  FLOORS="$WORK/plugin.json"
+  printf '{ "dependencies": [ { "name": "other", "version": ">=1.0.0 <2" } ] }\n' > "$FLOORS"
+  before="$(cat "$FLOORS")"
+  run "$SET" "$FLOORS" 1.8.0 --floor core
+  [ "$status" -ne 0 ]
+  [ "$(cat "$FLOORS")" = "$before" ]
+}
