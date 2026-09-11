@@ -13,6 +13,7 @@ import re
 import sys
 
 VERSION_LINE = re.compile(r'^(\s*"version"\s*:\s*")([^"]*)(".*)$')
+NAME_LINE = re.compile(r'^\s*"name"\s*:')
 
 
 def take(args, flag):
@@ -68,6 +69,9 @@ def main() -> int:
             return 1
 
     for i in range(start, len(lines)):
+        # The next entry's name ends this one: past it, a version belongs to someone else.
+        if plugin is not None and NAME_LINE.match(lines[i]):
+            break
         m = VERSION_LINE.match(lines[i])
         if m:
             if m.group(2) == new:
@@ -78,7 +82,8 @@ def main() -> int:
                 fh.writelines(lines)
             return 0
 
-    print("error: no version line found in %s" % path, file=sys.stderr)
+    where = "the entry for %r in %s" % (plugin, path) if plugin is not None else path
+    print("error: no version line found in %s" % where, file=sys.stderr)
     return 1
 
 

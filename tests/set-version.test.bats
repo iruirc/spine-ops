@@ -75,6 +75,27 @@ changed_lines() { diff <(printf '%s\n' "$1") "$MANIFEST" | grep -c '^>' || true;
   [ "$(cat "$MANIFEST")" = "$before" ]
 }
 
+@test "a plugin entry with no version of its own is refused rather than editing the next one" {
+  cat > "$MANIFEST" <<'JSON'
+{
+  "plugins": [
+    {
+      "name": "alpha",
+      "description": "first, and no version"
+    },
+    {
+      "name": "beta",
+      "version": "2.0.0"
+    }
+  ]
+}
+JSON
+  before="$(cat "$MANIFEST")"
+  run "$SET" "$MANIFEST" 1.1.0 --plugin alpha
+  [ "$status" -ne 0 ]
+  [ "$(cat "$MANIFEST")" = "$before" ]
+}
+
 # A plugin can quote its own version as a dependency floor in files a release has
 # to move with it — a reference copy of that line in a doc or a fixture.
 @test "a plugin's own floor is rewritten on every line that quotes it, and nowhere else" {
