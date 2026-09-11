@@ -1,0 +1,7 @@
+- `workspace-init` no longer ships a copy of core's config template: step `s02b_meta_config` has `spine-toolkit:setup` write the meta-repo's `CLAUDE-spine-toolkit.md`, with the meta-repo as its working directory, and the workspace appends only its own `## Workspace meta`. A core change reaches a new workspace without a release here
+- `workspace.yml` gains an optional `toolkit:` block — `lang`, `mode`, `progress`, defaulting to `en`, `manual`, `normal` — asked at the start and near the end of the dialog; a new workspace is no longer always `en`, and the language question defaults to the language the current directory already has
+- `swift-init` takes `--lang`, `--mode`, `--progress`, `--tasks` and `--docs-map` and hands them to setup unread, naming the artifact's root as setup's working directory; under `--no-prompt` they default, so `workspace-init --from` is asked none of core setup's own questions — `swift-setup` still asks for an axis the flags cannot name, such as `tests`
+- `--with-tasks` is replaced by `--tasks=create`, and `Tasks/` is created by setup rather than by `swift-init`
+- the meta config no longer carries `- ecosystem: apple` or the `architecture-choice` line in `## Modules`: setup never writes the first, and the second described behaviour the skill does not have
+- declares `spine-toolkit >=1.9.0 <2`: below that, setup does not know the answers workspace-init passes and asks instead
+- workspaces created earlier keep the config they were created with

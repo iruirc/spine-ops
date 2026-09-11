@@ -1,0 +1,3 @@
+- `setup`'s `## Input` takes an answer for each question setup asks about the config: `tasks = create | skip` and `docs_map = create | skip` decide the `Tasks/` and registry questions, and `stack = —` skips the platform half, reported as deferred by the caller. A caller that fills every field gets none of setup's own questions; a platform half it does not skip still asks for an axis value it cannot place
+- the overwrite and migration confirmations stay questions: they are consent, not config
+- the reference driver floor moves to `>=1.9.0 <2` with this release; nothing the platforms vendor moved, so none of them has to re-vendor
