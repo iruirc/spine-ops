@@ -1,0 +1,4 @@
+- the config `workspace-init` writes now matches core 1.8.0: `walkthrough: deep` with its three depths, `driver` and `phase_verification` in `## Validation`, and the `## Docs` and `## Scale` blocks
+- a new workspace starts at `lite` in `## Scale`, as a project attached with `/setup` does; the missing block used to leave it at `full`. Workspaces created earlier keep the config they were created with
+- the core floor rises to `>=1.8.0 <2`: core reads the walkthrough depth and `phase_verification` from 1.8
+- the template test checks core's full block list, so the next block core adds turns this suite red instead of drifting unseen
