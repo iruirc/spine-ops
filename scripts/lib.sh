@@ -34,6 +34,9 @@ checkout_path() {
 
 verify_cmd() { jq -r --arg n "$1" '.checkouts[$n].verify // empty' "$CONFIG"; }
 
+# Files that quote the plugin's own version as a dependency floor and move with it.
+floor_files() { jq -r --arg n "$1" '.checkouts[$n].floor_files // [] | .[]' "$CONFIG"; }
+
 # --- the roster: from the marketplace manifest -----------------------------
 
 manifest() { echo "$(marketplace_path)/.claude-plugin/marketplace.json"; }

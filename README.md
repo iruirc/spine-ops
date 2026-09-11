@@ -61,21 +61,24 @@ Every command takes `-h`. The two read-only ones take nothing else.
 |---|---|---|
 | `scripts/status.sh` | — | one table: version, highest tag, branch, ahead/behind, tree, and unreleased commits |
 | `scripts/check.sh` | — | the invariants nobody was checking. Exit 0 clean, 1 on a breach — the one to run in a hook or before a release |
-| `scripts/release.sh` | `<targets…> [--dry-run]` | bump, commit, tag. Stops there. Exit 2 means the release notes are missing and names them |
-| `scripts/push.sh` | `[--dry-run]` | publish what release prepared: commits and tags, per repository |
+| `scripts/release.sh` | `<targets…> [--dry-run]` | bump, verify the bumped trees, commit, tag. Stops there. Exit 2 means the release notes are missing and names them |
+| `scripts/push.sh` | `[--dry-run]` | publish what release prepared: commits and each repository's release tag, nothing else |
 | `scripts/test.sh` | — | the suite under `tests/`, `bats-core` required |
 
 `tests/` covers the part of this repository where a wrong answer is silent — the semver arithmetic
 that decides which version a release lands on, and the reading of tags it decides from. A textual
 comparison would put `1.10.0` below `1.9.0` and refuse a release for not being above a version it is
-plainly above; that is what the suite is for, not coverage.
+plainly above; that is what the suite is for, not coverage. The same goes for the release itself,
+run against throwaway repositories: that verification sees the version being tagged, that a failure
+leaves every repository as it was, and that a push publishes release tags and no others.
 
 Two files under `scripts/` are not commands:
 
 - `lib.sh` — sourced by all four: the config, the roster, semver, the git guards. Never executed.
-- `set-version.py` — rewrites one `"version"` line in place. A `jq` round-trip would reformat these
-  manifests, and a release diff has to show one changed line rather than a reflow. Called by
-  `release.sh`; usable alone as `set-version.py FILE 1.4.0 [--plugin NAME]`.
+- `set-version.py` — rewrites `"version"` lines in place. A `jq` round-trip would reformat these
+  manifests, and a release diff has to show the changed lines rather than a reflow. Called by
+  `release.sh`; usable alone as `set-version.py FILE 1.4.0 [--plugin NAME | --floor NAME]`, where
+  `--floor` moves every quoted `"name": NAME, "version": ">=…"` to `>=1.4.0 <2`.
 
 ## repos.json
 
@@ -83,7 +86,8 @@ Two files under `scripts/` are not commands:
 {
   "marketplace": { "path": "../claude-marketplace" },
   "checkouts": {
-    "spine-toolkit": { "path": "../spine-toolkit", "verify": "scripts/test-foundation.sh" }
+    "spine-toolkit": { "path": "../spine-toolkit", "verify": "scripts/test-foundation.sh",
+                       "floor_files": ["docs/building-a-driver.md"] }
   }
 }
 ```
@@ -91,6 +95,13 @@ Two files under `scripts/` are not commands:
 `path` is relative to this repository. `verify` runs from the checkout's own root and must exit 0
 for that plugin to be released; leave it out and the release says the plugin was not verified rather
 than pretending it was. Which plugins exist is not written here — see above.
+
+`floor_files` lists files, relative to the checkout, that quote the plugin's **own** version as a
+dependency floor — `{ "name": "spine-toolkit", "version": ">=1.7.3 <2" }` in a reference copy for
+the plugins that depend on it. The release moves every such line in the same commit as the version,
+because a suite that holds them equal is red on a commit that moves one without the other. A listed
+file that quotes no floor stops the release. It is not a platform's dependency on core: that floor
+is raised by an ordinary commit when the platform starts to need a newer core, never by a release.
 
 ## Releasing
 
@@ -114,7 +125,17 @@ paths, and the second one releases. That file becomes the commit body, and since
 this family keeps a CHANGELOG, `notes/` is the only place these accumulate.
 
 Before touching anything, a release refuses a repository that is not on `main`, has a dirty tree, or
-sits behind its remote — and runs each plugin's own `verify` command. A release nobody tested is the
-thing this exists to prevent.
+sits behind its remote. Then it works in three steps:
 
-Pushing is separate. A tag on the remote is not withdrawn quietly.
+1. **Stage** — every plugin's version and `floor_files`, and the marketplace listing, are edited in
+   the working trees. Nothing is committed yet.
+2. **Verify** — each plugin's own `verify` runs on its staged tree, so what passes is the tree that
+   gets tagged. A failure prints the tail of its output and keeps the full log.
+3. **Commit and tag** — only once every plugin has passed.
+
+Any failure in the first two steps reverts every staged edit in every repository and commits
+nothing. A release nobody tested is the thing this exists to prevent, and a verification run on the
+version before the bump tests something else.
+
+Pushing is separate. A tag on the remote is not withdrawn quietly, which is also why `push.sh` sends
+only the tag each manifest declares — any other local tag stays local.

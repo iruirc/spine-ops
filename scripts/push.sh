@@ -15,22 +15,30 @@ case "${1:-}" in
 esac
 
 send() {
-  local label="$1" dir="$2" br ahead tags
+  local label="$1" dir="$2" tag="$3" br ahead pending=""
   br="$(current_branch "$dir")"
   git -C "$dir" fetch origin --quiet 2>/dev/null || true
   ahead="$(git -C "$dir" rev-list --count "origin/$br..$br" 2>/dev/null || echo 0)"
-  tags="$(git -C "$dir" push --tags --dry-run origin 2>&1 | grep -c '\[new tag\]' || true)"
-  if [ "$ahead" -eq 0 ] && [ "$tags" -eq 0 ]; then note "$label: nothing to push"; return; fi
-  if [ "$DRY" -eq 1 ]; then note "$label: $ahead commit(s), $tags tag(s) would go to origin/$br"; return; fi
+  # The release tag is the version the manifest declares. Any other local tag is
+  # somebody's scratch, and pushing it would publish it.
+  if [ -n "$tag" ] && has_tag "$dir" "$tag" \
+    && ! git -C "$dir" ls-remote --exit-code --tags origin "refs/tags/$tag" >/dev/null 2>&1; then
+    pending="$tag"
+  fi
+  if [ "$ahead" -eq 0 ] && [ -z "$pending" ]; then note "$label: nothing to push"; return; fi
+  if [ "$DRY" -eq 1 ]; then note "$label: $ahead commit(s)${pending:+ and tag $pending} would go to origin/$br"; return; fi
   [ "$br" = "main" ] || die "$label is on '$br' — refusing to push a release from a branch"
   git -C "$dir" push --quiet origin "$br"
-  git -C "$dir" push --quiet --tags origin
-  note "$label: $ahead commit(s) and $tags tag(s) pushed"
+  [ -z "$pending" ] || git -C "$dir" push --quiet origin "refs/tags/$pending"
+  note "$label: $ahead commit(s)${pending:+ and tag $pending} pushed"
 }
 
 echo "push:"
-while IFS= read -r n; do send "$n" "$(checkout_path "$n")"; done < <(plugin_names)
-send marketplace "$(marketplace_path)"
+while IFS= read -r n; do
+  d="$(checkout_path "$n")"
+  send "$n" "$d" "$(plugin_version "$d")"
+done < <(plugin_names)
+send marketplace "$(marketplace_path)" "$(marketplace_version)"
 # Not a plugin and never tagged, but it holds the notes the tags are described
 # by: left behind, a published release explains itself nowhere.
-send spine-ops "$OPS_ROOT"
+send spine-ops "$OPS_ROOT" ""

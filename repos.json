@@ -1,7 +1,8 @@
 {
   "marketplace": { "path": "../claude-marketplace" },
   "checkouts": {
-    "spine-toolkit":   { "path": "../spine-toolkit",   "verify": "scripts/test-foundation.sh" },
+    "spine-toolkit":   { "path": "../spine-toolkit",   "verify": "scripts/test-foundation.sh",
+                         "floor_files": ["conventions/driver-contract.md", "docs/building-a-driver.md", "tests/fixtures/fixture-driver/.claude-plugin/plugin.json"] },
     "spine-platform-swift":  { "path": "../spine-platform-swift",  "verify": "scripts/test-foundation.sh" },
     "spine-platform-kotlin": { "path": "../spine-platform-kotlin", "verify": "scripts/test-foundation.sh" },
     "spine-driver-mobile":       { "path": "../spine-driver-mobile",       "verify": "../spine-toolkit/scripts/lint-driver-manifest.sh ." },

@@ -84,6 +84,9 @@ echo "plan:"
 while IFS=$'\t' read -r name dir from to kind n; do
   [ -n "$name" ] || continue
   printf '  %-16s %-7s -> %-7s %-6s %s commit(s)  notes/%s-%s.md\n' "$name" "$from" "$to" "$kind" "$n" "$name" "$to"
+  while IFS= read -r f; do
+    [ -z "$f" ] || printf '  %-16s moves its floor in %s\n' "" "$f"
+  done < <(floor_files "$name")
 done <<<"$PLAN"
 printf '  %-16s %-7s -> %-7s %-6s (body generated)\n' marketplace "$mp_cur" "$mp_to" "$(kind_between "$mp_cur" "$mp_to")"
 echo
@@ -117,24 +120,68 @@ fi
 
 [ "$DRY" -eq 0 ] || { echo; echo "--dry-run: stopping before verification and any change."; exit 0; }
 
+# --- stage: every edit, in the working trees only --------------------------
+# Verification has to run on the tree that gets tagged, so every version moves
+# before it — and every edit is undone if anything after it fails.
+
+STAGED=""     # lines: dir<TAB>file
+stage() { STAGED="$STAGED$1	$2
+"; }
+abort() {
+  while IFS=$'\t' read -r d f; do
+    [ -n "$d" ] || continue
+    git -C "$d" checkout --quiet -- "$f"
+  done <<<"$STAGED"
+  die "$* — every staged edit was reverted, nothing was committed"
+}
+
+echo
+echo "stage:"
+while IFS=$'\t' read -r name dir from to kind n; do
+  [ -n "$name" ] || continue
+  stage "$dir" .claude-plugin/plugin.json
+  "$OPS_ROOT/scripts/set-version.py" "$dir/.claude-plugin/plugin.json" "$to" || abort "$name: could not set $to"
+  while IFS= read -r f; do
+    [ -n "$f" ] || continue
+    stage "$dir" "$f"
+    "$OPS_ROOT/scripts/set-version.py" "$dir/$f" "$to" --floor "$name" || abort "$name: $f quotes no floor to move"
+  done < <(floor_files "$name")
+  note "$name: $from -> $to"
+done <<<"$PLAN"
+stage "$mp" .claude-plugin/marketplace.json
+while IFS=$'\t' read -r name dir from to kind n; do
+  [ -n "$name" ] || continue
+  "$OPS_ROOT/scripts/set-version.py" "$(manifest)" "$to" --plugin "$name" || abort "marketplace: could not list $name at $to"
+done <<<"$PLAN"
+"$OPS_ROOT/scripts/set-version.py" "$(manifest)" "$mp_to" || abort "marketplace: could not set $mp_to"
+note "marketplace: $mp_cur -> $mp_to"
+
 echo
 echo "verify:"
 while IFS=$'\t' read -r name dir from to kind n; do
   [ -n "$name" ] || continue
   cmd="$(verify_cmd "$name")"
   [ -n "$cmd" ] || { note "$name: no verify declared — skipped"; continue; }
-  ( cd "$dir" && eval "$cmd" ) >/dev/null || die "$name failed its own verification; nothing was changed"
-  note "$name: $cmd passed"
+  log="$(mktemp)"
+  if ( cd "$dir" && eval "$cmd" ) >"$log" 2>&1; then
+    rm -f "$log"
+    note "$name: $cmd passed at $to"
+  else
+    tail -n 40 "$log" | sed 's/^/    /'
+    abort "$name failed its own verification at $to (full log: $log)"
+  fi
 done <<<"$PLAN"
 
-# --- apply -----------------------------------------------------------------
+# --- commit and tag --------------------------------------------------------
 
 echo
 echo "release:"
 while IFS=$'\t' read -r name dir from to kind n; do
   [ -n "$name" ] || continue
-  "$OPS_ROOT/scripts/set-version.py" "$dir/.claude-plugin/plugin.json" "$to"
   git -C "$dir" add .claude-plugin/plugin.json
+  while IFS= read -r f; do
+    [ -z "$f" ] || git -C "$dir" add "$f"
+  done < <(floor_files "$name")
   git -C "$dir" commit --quiet -F - <<COMMIT
 chore: release $to
 
@@ -147,11 +194,9 @@ done <<<"$PLAN"
 body="Plugin versions this release carries:"
 while IFS=$'\t' read -r name dir from to kind n; do
   [ -n "$name" ] || continue
-  "$OPS_ROOT/scripts/set-version.py" "$(manifest)" "$to" --plugin "$name"
   body="$body
 - $name $from -> $to"
 done <<<"$PLAN"
-"$OPS_ROOT/scripts/set-version.py" "$(manifest)" "$mp_to"
 git -C "$mp" add .claude-plugin/marketplace.json
 git -C "$mp" commit --quiet -F - <<COMMIT
 chore: release $mp_to
