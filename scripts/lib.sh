@@ -6,6 +6,8 @@
 # A second roster would drift from the first, which is how the marketplace went
 # a whole release without a tag.
 
+# Before `set`: sourced from another shell, it must leave that shell's options alone.
+[ -n "${BASH_VERSION:-}" ] || { echo "lib.sh is bash: source it from a bash script" >&2; return 1 2>/dev/null || exit 1; }
 set -euo pipefail
 
 OPS_ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
