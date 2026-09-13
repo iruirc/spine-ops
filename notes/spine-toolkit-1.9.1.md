@@ -1,0 +1,5 @@
+- an epic reads its steps in the vocabulary `task-new` writes: the step schema of `workflows/profile-epic.js` takes `PENDING | IN_PROGRESS | DONE | DEFERRED | BLOCKED | SKIPPED`, where it used to take `TODO` and `ACTIVE` instead of the first two, so a step created at `PENDING` could not be reported through it
+- the epic's Plan stage creates steps at `PENDING`, no longer at `TODO`, and `workflow-epic` names the same set as the template, `task-new`, `task-move` and `task-status`
+- a step that still says `TODO` or `ACTIVE` is read as `PENDING` or `IN_PROGRESS`; neither is skipped, so an epic written that way walks as it did, and its `Task.md` files need no edit
+- `tests/foundation/lib/step-status.test.bats` holds the six copies of the vocabulary equal and fails on any instruction that starts a step at `TODO` or `ACTIVE`
+- the reference driver floor moves to `>=1.9.1 <2` with this release; nothing the platforms vendor moved, so none of them has to re-vendor
