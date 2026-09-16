@@ -1,0 +1,3 @@
+- agents no longer pin `model: opus`: a stage agent runs on the model `## Models` names for its role, else `CLAUDE_CODE_SUBAGENT_MODEL`, else the session's — a session on `sonnet` now plans and reviews on `sonnet`; set the roles to `opus` in `## Models` to keep the old behaviour
+- `swift-validator` keeps `model: sonnet`
+- `scripts/lint-manifest.sh` is re-vendored from spine-toolkit 1.11.0 and rejects an agent that pins an effort or a model heavier than `sonnet`; the core floor moves to `>=1.11.0 <2`

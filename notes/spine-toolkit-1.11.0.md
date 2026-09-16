@@ -1,0 +1,9 @@
+- every subagent call runs on a model and at an effort one rule decides (`conventions/stage-dispatch.md` → Model and effort): a stage call takes its role's; the walkthrough and the mechanical calls — reading `Plan.md` back, ticking an epic step, moving a reviewed task, writing `Done.md` — take `light`, and the mechanical ones always run at `low`
+- a project chooses them in two new blocks of `CLAUDE-spine-toolkit.md`: `## Models` — `light` and the eight dispatched roles, each `opus`, `sonnet`, `haiku`, `fable` or `platform` — and `## Effort` — the eight roles, each `low` … `max` or `session`; a task overrides any key with `[MODELS]` / `[EFFORT]` in its `Task.md`, and an epic's keys reach its steps
+- `light` defaults to `sonnet`, so the walkthrough, the final report and the read-back calls no longer run on the stage's model; `light: platform` keeps them where they were
+- `scripts/resolve-tuning.sh` is the one reader of the four settings, and the Outbound Contract ships its output as the new `models` and `effort` fields
+- a run through a skill, where the Workflow tool is unavailable, passes the model but cannot pass an effort, and says so once when `## Effort` asks for one
+- the live stage metrics line folds every agent a stage ran and shows each model and effort it used, `claude-opus-5 xhigh ×3 + claude-sonnet-5 low`; `agent-metrics.sh` records each agent's effort and adds a Tuning column to `md` and `panel`
+- the platform contract forbids a platform agent to pin an `effort` or any model but `sonnet` or `haiku`, and `scripts/lint-manifest.sh` enforces it — a vendored file, so both platforms re-vendor it in this release
+- the model order these settings rely on — the dispatch's model, then the agent's, then `CLAUDE_CODE_SUBAGENT_MODEL`, then the session's — holds from Claude Code 2.1.251; on older versions the environment variable overrides `## Models`
+- the reference driver floor moves to `>=1.11.0 <2` with this release
