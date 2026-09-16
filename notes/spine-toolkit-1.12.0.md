@@ -1,0 +1,6 @@
+- `## Models` and `[MODELS]` spell "pass no model" as `session`, the word `## Effort` already uses: a role at `session` runs on `CLAUDE_CODE_SUBAGENT_MODEL`, else the session's model, and `light: session` falls back to the role's key
+- `validator` defaults to `sonnet` in core, where `## Models` shows it; set it to `session` to validate on the session's model
+- a `platform` written by 1.11.0 reads as if its line were absent, so a project configured then keeps every model it had: leave those lines or delete them; to rewrite one, write `session` for `light` and the seven stage roles, and `sonnet` for `validator` — `session` there would move validation to the session's model
+- two 1.11.0 spellings behave differently: `light: platform` now gives `sonnet` rather than the role's key, and `[MODELS] = [<role>: platform]` in a task no longer overrides the project; write `session` for either (for `validator`, `sonnet`)
+- the platform contract forbids any `model` in a platform agent's frontmatter, and `scripts/lint-manifest.sh` enforces it — a vendored file, so both platforms re-vendor it in this release
+- the reference driver floor moves to `>=1.12.0 <2` with this release

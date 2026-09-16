@@ -1,0 +1,2 @@
+- the three validators no longer pin `model: sonnet`: core 1.12.0 defaults `validator` to `sonnet` in `## Models`, so a project changes it there, and `CLAUDE_CODE_SUBAGENT_MODEL` reaches them when the key says `session`; dispatched outside a spine run, they now run on the session's model
+- `scripts/lint-manifest.sh` is re-vendored from spine-toolkit 1.12.0 and rejects any `model` in an agent's frontmatter, and the agent shape test holds the same rule; the core floor moves to `>=1.12.0 <2`

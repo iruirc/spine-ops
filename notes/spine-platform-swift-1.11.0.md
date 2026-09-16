@@ -1,0 +1,2 @@
+- `swift-validator` no longer pins `model: sonnet`: core 1.12.0 defaults `validator` to `sonnet` in `## Models`, so a project changes it there, and `CLAUDE_CODE_SUBAGENT_MODEL` reaches it when the key says `session`; dispatched outside a spine run, it now runs on the session's model
+- `scripts/lint-manifest.sh` is re-vendored from spine-toolkit 1.12.0 and rejects any `model` in an agent's frontmatter; the core floor moves to `>=1.12.0 <2`
