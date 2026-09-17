@@ -1,0 +1,5 @@
+- `--adopt` no longer wraps a heading that is quoted inside a code fence, and leaves a file alone when the only occurrence of the heading is fenced
+- a `contents.xcworkspacedata` or `.code-workspace` the script creates now takes your umask instead of the private mode of its temp file, and the `.code-workspace` is written only after `yq` succeeds
+- `--check` names a `.code-workspace` it would create instead of counting drift it never showed
+- the skill now says which locale string each exit code maps to — exit 4 means a lookup that failed or a write that failed, exit 2 a schema error or a bad call — and the `yq` install hint lives in the locales with the other user-facing strings
+- `wsmark::lint` names the first close when a marker has three pairs, and `workspace-init` no longer claims Tasks and Docs are registered in the `.xcworkspace` tree
