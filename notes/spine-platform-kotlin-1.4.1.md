@@ -1,0 +1,1 @@
+- examples only, nothing the agents do changes: the forbidden and accepted comments in the comment policy of `kotlin-compose-developer`, `kotlin-kmp-developer`, `kotlin-server-developer` and `kotlin-refactorer` name invented tasks and types

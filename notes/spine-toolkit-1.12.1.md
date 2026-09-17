@@ -1,0 +1,3 @@
+- under Method A at `normal` and above, the orchestrator prints a line before every `Workflow` call naming the stage or range it covers and the `/workflows` run it starts: the host lists each run by `meta.name` alone, so the per-stage runs of a `manual` task used to show up as identical rows
+- examples only, nothing the toolkit does changes: the epic that `task-new`, `task-move`, `workflow-epic` and `orchestrator` illustrate with, the record in `conventions/docs-components.md` and the forbidden comments in the `CLAUDE-spine-toolkit.md` template name invented tasks and components
+- the reference driver floor moves to `>=1.12.1 <2` with this release

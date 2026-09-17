@@ -1,0 +1,1 @@
+- examples only, nothing the agents do changes: the forbidden and accepted comments in the comment policy of `swift-developer` and `swift-refactorer` name invented tasks and types
