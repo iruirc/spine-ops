@@ -1,0 +1,3 @@
+- reference-guide loading no longer depends on `rg` or a path from the plugin root: all 13 `references/detailed-guide.md` guides open with `## Contents`, and their `SKILL.md` loads a section by name from beside itself — the same fix `spine-platform-swift` shipped for its own guides
+- README quotes the core range `plugin.json` declares (`>=1.12.0 <2`, was `>=1.5.0 <2`), the manifest table lists `## Driver`, and Internationalization names only the agents and `kotlin-setup` as bilingual — the knowledge skills were never bilingual
+- `tests/foundation/lib/core-refs.test.bats` reads the core floor from `plugin.json` instead of a hardcoded tag, so it can't drift from it again
