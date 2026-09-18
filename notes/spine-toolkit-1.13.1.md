@@ -1,0 +1,3 @@
+- Method A dispatches a profile by its registered name, `spine-toolkit:profile-<profile>`, rather than by a path into the plugin's own install directory: Claude Code refuses that path from 2.1.275, so every Method A run opened with a failed call in front of the user before the task had started. A name that does not resolve falls back to the path once, and a path refused too falls back to Method B as a declared deviation
+- an epic under Method A pushes each step by name as well, so `plugin_root` no longer decides whether a step runs at all — absent, push still runs and only the fallback is gone. `manual` mode and a step that is itself an epic remain the only two things that force pull
+- the reference driver floor moves to `>=1.13.1 <2` with this release
