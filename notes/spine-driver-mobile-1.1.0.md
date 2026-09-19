@@ -1,0 +1,2 @@
+- the core floor moves to `>=2.0.0 <3`. Core below that range does not read the field this driver is declared in, and the host demotes a plugin whose dependency is unmet — it does not load at all
+- the README declares the driver as `[DRIVER] = [spine-driver-mobile]` in `## Task defaults`, not `driver: spine-driver-mobile` in `## Validation`. `/setup` carries an existing declaration over; a config written by hand needs the new line

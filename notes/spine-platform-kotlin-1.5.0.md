@@ -1,0 +1,4 @@
+- the core floor moves to `>=2.0.0 <3`. This release reads the project config's fields, which only core 2.x writes; an installed core below that range is not a warning — the host demotes this plugin and it does not load at all
+- every surface that named a settings block now names a field: the agents, `kotlin-setup` and the README read `[LANG]`, `[DRIVE_APP]`, `[DRIVER]`, `[MANUAL_CHECKS]`, `[PROGRESS]` and `[WORKFLOW_MODE]` where they read `## Language`, `## Validation` and `## Mode`. A project with nothing to drive sets `[DRIVE_APP] = [off]`, not `drive_app: off`
+- `conventions/i18n.md` and `scripts/lint-manifest.sh` are re-vendored from spine-toolkit 2.0.0
+- the format guard now scans `scripts/` and `commands/` too, and `core-refs.test.bats` no longer names a ref its fallback never consulted nor silently absorbs a `$CORE` that is not a git checkout
