@@ -1,0 +1,3 @@
+- a native Codex manifest, `.codex-plugin/plugin.json`, and Codex UI metadata for every skill: Codex installs the plugin from a marketplace and loads its twenty-nine knowledge skills. The sixteen agents and `/kotlin-init` stay Claude Code components, and `manifest` and `kotlin-setup`, which only spine-toolkit drives, are kept out of Codex's implicit skill list; spine-toolkit ships no Codex manifest, so nothing orchestrates tasks there. Claude Code loads the plugin as before
+- `architecture-choice` ends with the skill list on a host without `kotlin-init` and `kotlin-architect`
+- the two manifests carry one identity and one version, and the foundation suite fails when they differ
