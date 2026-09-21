@@ -82,6 +82,19 @@ give_origins() {
   [ -z "$(git -C "$W/core" status --porcelain)" ]
 }
 
+@test "a plugin that ships to Codex too is verified and committed with both manifests moved" {
+  mkdir -p "$W/core/.codex-plugin"
+  printf '{\n  "name": "core",\n  "version": "1.0.0"\n}\n' > "$W/core/.codex-plugin/plugin.json"
+  printf '#!/usr/bin/env bash\n[ "$(jq -r .version .codex-plugin/plugin.json)" = "$(jq -r .version .claude-plugin/plugin.json)" ]\n' > "$W/core/verify.sh"
+  commit_all "$W/core"
+
+  run "$W/ops/scripts/release.sh" core=minor
+  [ "$status" -eq 0 ] || { echo "$output"; return 1; }
+  [ "$(jq -r .version "$W/core/.codex-plugin/plugin.json")" = "1.1.0" ]
+  [ "$(git -C "$W/core" show --format= --name-only 1.1.0 | sort | tr '\n' ' ')" = ".claude-plugin/plugin.json .codex-plugin/plugin.json docs/driver.md " ]
+  [ -z "$(git -C "$W/core" status --porcelain)" ]
+}
+
 @test "a failed verification says why and leaves every repository as it was" {
   printf '#!/usr/bin/env bash\necho "verify said no"\nexit 1\n' > "$W/core/verify.sh"
   commit_all "$W/core"

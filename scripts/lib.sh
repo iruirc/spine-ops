@@ -58,6 +58,13 @@ plugin_version() {
   jq -r '.version' "$f"
 }
 
+# Every host manifest that states the plugin's version, relative to its checkout:
+# Claude Code's always, Codex's when the plugin ships one. A release moves them together.
+host_manifests() {
+  echo .claude-plugin/plugin.json
+  [ ! -f "$1/.codex-plugin/plugin.json" ] || echo .codex-plugin/plugin.json
+}
+
 # --- semver ----------------------------------------------------------------
 
 is_semver() { [[ "$1" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; }

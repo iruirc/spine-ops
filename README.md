@@ -128,7 +128,8 @@ Before touching anything, a release refuses a repository that is not on `main`, 
 sits behind its remote. Then it works in three steps:
 
 1. **Stage** — every plugin's version and `floor_files`, and the marketplace listing, are edited in
-   the working trees. Nothing is committed yet.
+   the working trees. Nothing is committed yet. The version moves in `.claude-plugin/plugin.json`
+   and, for a plugin that ships to Codex too, in `.codex-plugin/plugin.json`.
 2. **Verify** — each plugin's own `verify` runs on its staged tree, so what passes is the tree that
    gets tagged. A failure prints the tail of its output and keeps the full log.
 3. **Commit and tag** — only once every plugin has passed.

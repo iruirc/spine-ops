@@ -85,6 +85,9 @@ while IFS=$'\t' read -r name dir from to kind n; do
   [ -n "$name" ] || continue
   printf '  %-16s %-7s -> %-7s %-6s %s commit(s)  notes/%s-%s.md\n' "$name" "$from" "$to" "$kind" "$n" "$name" "$to"
   while IFS= read -r f; do
+    [ "$f" = .claude-plugin/plugin.json ] || printf '  %-16s moves its version in %s too\n' "" "$f"
+  done < <(host_manifests "$dir")
+  while IFS= read -r f; do
     [ -z "$f" ] || printf '  %-16s moves its floor in %s\n' "" "$f"
   done < <(floor_files "$name")
 done <<<"$PLAN"
@@ -139,8 +142,10 @@ echo
 echo "stage:"
 while IFS=$'\t' read -r name dir from to kind n; do
   [ -n "$name" ] || continue
-  stage "$dir" .claude-plugin/plugin.json
-  "$OPS_ROOT/scripts/set-version.py" "$dir/.claude-plugin/plugin.json" "$to" || abort "$name: could not set $to"
+  while IFS= read -r f; do
+    stage "$dir" "$f"
+    "$OPS_ROOT/scripts/set-version.py" "$dir/$f" "$to" || abort "$name: could not set $to in $f"
+  done < <(host_manifests "$dir")
   while IFS= read -r f; do
     [ -n "$f" ] || continue
     stage "$dir" "$f"
@@ -178,7 +183,9 @@ echo
 echo "release:"
 while IFS=$'\t' read -r name dir from to kind n; do
   [ -n "$name" ] || continue
-  git -C "$dir" add .claude-plugin/plugin.json
+  while IFS= read -r f; do
+    git -C "$dir" add "$f"
+  done < <(host_manifests "$dir")
   while IFS= read -r f; do
     [ -z "$f" ] || git -C "$dir" add "$f"
   done < <(floor_files "$name")

@@ -39,6 +39,16 @@ while IFS= read -r n; do
   else bad "$n declares $own, the marketplace lists $listed"; fi
 done < <(plugin_names)
 
+# 3b. A plugin that ships to Codex too writes its version in a second manifest,
+#     which release.sh moves and a hand edit forgets.
+while IFS= read -r n; do
+  d="$(checkout_path "$n")" || continue
+  [ -f "$d/.codex-plugin/plugin.json" ] || continue
+  own="$(plugin_version "$d")"; codex="$(jq -r '.version' "$d/.codex-plugin/plugin.json")"
+  if [ "$own" = "$codex" ]; then good "$n $own matches its Codex manifest"
+  else bad "$n declares $own, its Codex manifest $codex"; fi
+done < <(plugin_names)
+
 # 4. A declared version with no tag is a release nobody can check out again.
 check_tagged() {
   local label="$1" dir="$2" ver="$3"
