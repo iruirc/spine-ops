@@ -43,7 +43,80 @@ floor_files() { jq -r --arg n "$1" '.checkouts[$n].floor_files // [] | .[]' "$CO
 
 manifest() { echo "$(marketplace_path)/.claude-plugin/marketplace.json"; }
 
+codex_manifest() { echo "$(marketplace_path)/.agents/plugins/marketplace.json"; }
+
 plugin_names() { jq -r '.plugins[].name' "$(manifest)"; }
+
+# The Codex catalogue is a projection of the canonical Claude roster: every
+# plugin with a Codex manifest appears exactly once, and no Claude-only plugin
+# appears there. It carries Git sources, not copied versions, so releases never
+# rewrite it; this validator is what prevents the projection from drifting.
+codex_marketplace_errors() {
+  local file expected actual fail=0 n p d repo expected_url
+  file="$(codex_manifest)"
+  if [ ! -f "$file" ]; then
+    echo "Codex marketplace is missing: $file"
+    return 1
+  fi
+  if ! jq -e 'type == "object" and (.plugins | type == "array")' "$file" >/dev/null 2>&1; then
+    echo "Codex marketplace is not a valid catalogue: $file"
+    return 1
+  fi
+
+  if [ "$(jq -r '.name // empty' "$file")" != "$(jq -r '.name // empty' "$(manifest)")" ]; then
+    echo "Codex and Claude marketplaces have different names"
+    fail=1
+  fi
+
+  expected="$({
+    while IFS= read -r n; do
+      d="$(checkout_path "$n")"
+      [ ! -f "$d/.codex-plugin/plugin.json" ] || printf '%s\n' "$n"
+    done < <(plugin_names)
+  } | sort)"
+  actual="$(jq -r '.plugins[].name' "$file" | sort)"
+  if [ "$actual" != "$expected" ]; then
+    echo "Codex marketplace roster differs from the plugins that ship Codex manifests"
+    fail=1
+  fi
+
+  while IFS= read -r n; do
+    [ -n "$n" ] || continue
+    p="$(jq -r --arg n "$n" '.checkouts[$n].path // empty' "$CONFIG")"
+    if [ -z "$p" ]; then
+      echo "Codex marketplace lists '$n', but repos.json has no checkout for it"
+      fail=1
+      continue
+    fi
+    d="$(cd "$OPS_ROOT/$p" 2>/dev/null && pwd)" || {
+      echo "Codex marketplace checkout for '$n' is missing"
+      fail=1
+      continue
+    }
+    if [ ! -f "$d/.codex-plugin/plugin.json" ]; then
+      echo "Codex marketplace lists '$n', but its checkout has no Codex manifest"
+      fail=1
+      continue
+    fi
+    repo="$(jq -r '.repository // empty' "$d/.codex-plugin/plugin.json")"
+    expected_url="${repo%.git}.git"
+    if ! jq -e --arg n "$n" --arg url "$expected_url" '
+      [.plugins[] | select(.name == $n)] as $entries |
+      ($entries | length) == 1 and
+      $entries[0].source.source == "url" and
+      $entries[0].source.url == $url and
+      $entries[0].source.ref == "main" and
+      $entries[0].policy.installation == "AVAILABLE" and
+      $entries[0].policy.authentication == "ON_INSTALL" and
+      ($entries[0].category | type == "string" and length > 0)
+    ' "$file" >/dev/null; then
+      echo "Codex marketplace entry for '$n' has the wrong Git source or policy"
+      fail=1
+    fi
+  done <<<"$actual"
+
+  return "$fail"
+}
 
 # Version a plugin is listed at IN THE MARKETPLACE, which is a different fact
 # from the version its own plugin.json carries. check.sh exists because the two

@@ -12,7 +12,7 @@ Maintenance for the `spine-toolkit` family: the plugins, and the marketplace tha
 | [**spine-platform-kotlin**](https://github.com/iruirc/spine-platform-kotlin) | [![](https://img.shields.io/github/v/tag/iruirc/spine-platform-kotlin?sort=semver&label=&color=0969da)](https://github.com/iruirc/spine-platform-kotlin/tags) | ![](https://img.shields.io/github/license/iruirc/spine-platform-kotlin?label=&color=555) | ![](https://img.shields.io/github/last-commit/iruirc/spine-platform-kotlin?label=&color=888) | Kotlin knowledge across Android, Compose Desktop, JVM servers and KMP |
 | [**spine-driver-mobile**](https://github.com/iruirc/spine-driver-mobile) | [![](https://img.shields.io/github/v/tag/iruirc/spine-driver-mobile?sort=semver&label=&color=0969da)](https://github.com/iruirc/spine-driver-mobile/tags) | ![](https://img.shields.io/github/license/iruirc/spine-driver-mobile?label=&color=555) | ![](https://img.shields.io/github/last-commit/iruirc/spine-driver-mobile?label=&color=888) | adapter declaring what the `mcp-devices` server drives, per surface |
 | [**spine-driver-agent-device**](https://github.com/iruirc/spine-driver-agent-device) | [![](https://img.shields.io/github/v/tag/iruirc/spine-driver-agent-device?sort=semver&label=&color=0969da)](https://github.com/iruirc/spine-driver-agent-device/tags) | ![](https://img.shields.io/github/license/iruirc/spine-driver-agent-device?label=&color=555) | ![](https://img.shields.io/github/last-commit/iruirc/spine-driver-agent-device?label=&color=888) | the same for `callstack/agent-device` |
-| [**claude-marketplace**](https://github.com/iruirc/claude-marketplace) | [![](https://img.shields.io/github/v/tag/iruirc/claude-marketplace?sort=semver&label=&color=0969da)](https://github.com/iruirc/claude-marketplace/tags) | ![](https://img.shields.io/github/license/iruirc/claude-marketplace?label=&color=555) | ![](https://img.shields.io/github/last-commit/iruirc/claude-marketplace?label=&color=888) | the catalogue users add, and the only roster of what exists |
+| [**claude-marketplace**](https://github.com/iruirc/claude-marketplace) | [![](https://img.shields.io/github/v/tag/iruirc/claude-marketplace?sort=semver&label=&color=0969da)](https://github.com/iruirc/claude-marketplace/tags) | ![](https://img.shields.io/github/license/iruirc/claude-marketplace?label=&color=555) | ![](https://img.shields.io/github/last-commit/iruirc/claude-marketplace?label=&color=888) | the Claude and Codex catalogues users add; the Claude catalogue is the canonical roster |
 
 Those badges read the remote, so they say what is **published**. `scripts/status.sh` reads this disk
 and says what is **here** — the two disagree exactly while something is committed and not yet pushed,
@@ -40,8 +40,10 @@ spine/
 
 `repos.json` declares that, and nothing else: **which checkout is where, and how each one verifies
 itself**. Which plugins exist is not written here — it is read from the marketplace's own
-`marketplace.json`. Two rosters would drift, and the drift `check.sh` found on its first run is what
-that looks like.
+`.claude-plugin/marketplace.json`. The Codex catalogue at `.agents/plugins/marketplace.json` is a
+checked projection of that roster: exactly the plugins that ship a `.codex-plugin/plugin.json`,
+each pointing at its Git repository. It carries no copied versions. `check.sh` holds that projection
+equal to the checkouts so it cannot become a second independent roster.
 
 ## First run on a machine
 
@@ -113,9 +115,11 @@ scripts/release.sh spine-toolkit=1.3.0          an explicit version
 scripts/release.sh minor --dry-run              the plan, the guards, and nothing else
 ```
 
-The marketplace is never released alone and never skipped: any plugin bump rewrites its listing, so
-it goes along at the highest increment of the release unless `marketplace=<kind|version>` says
-otherwise. A version named outright is measured against the current one for its increment, so
+The marketplace is never released alone and never skipped: any plugin bump rewrites its Claude
+listing, so it goes along at the highest increment of the release unless
+`marketplace=<kind|version>` says otherwise. The Codex catalogue points at each plugin's `main`
+branch and has no version field to bump; `check.sh` validates its roster, source URL and policy.
+A version named outright is measured against the current one for its increment, so
 `spine-toolkit=1.4.0` and `spine-toolkit=minor` reach the same marketplace version — how you spell a
 release never changes where it lands.
 
@@ -139,4 +143,6 @@ nothing. A release nobody tested is the thing this exists to prevent, and a veri
 version before the bump tests something else.
 
 Pushing is separate. A tag on the remote is not withdrawn quietly, which is also why `push.sh` sends
-only the tag each manifest declares — any other local tag stays local.
+only the tag each manifest declares — any other local tag stays local. It pushes plugin repositories
+before the marketplace, so Codex's Git-backed entries never become visible before their plugin
+commits do.

@@ -67,6 +67,15 @@ while IFS= read -r n; do
   [ "$own" = "$n" ] || bad "checkout at $d calls itself '$own', the marketplace calls it '$n'"
 done < <(plugin_names)
 
+# 5b. Codex has its own Git-backed catalogue, but not its own authoritative
+#     roster or version copies. It is the exact projection of plugins that ship
+#     a .codex-plugin manifest, with canonical GitHub sources and install policy.
+if codex_errors="$(codex_marketplace_errors)"; then
+  good "Codex marketplace matches every plugin that ships a Codex manifest"
+else
+  while IFS= read -r error; do [ -z "$error" ] || bad "$error"; done <<<"$codex_errors"
+fi
+
 # 6. A platform may only name core skills that exist in the oldest core its own
 #    dependency range admits. The floor is declared once and then nothing holds
 #    it: this is what holds it. The lint exits 0 when it could not reach the

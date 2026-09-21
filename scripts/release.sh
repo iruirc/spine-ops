@@ -7,9 +7,11 @@
 #   release.sh spine-toolkit=minor          only that one
 #   release.sh spine-toolkit=1.3.0          an explicit version, when a bump is not what you mean
 #
-# The marketplace is never optional: any plugin bump rewrites its listing, so it
-# is released alongside, at the highest increment of the release unless told
-# otherwise with marketplace=<kind|version>.
+# The marketplace is never optional: any plugin bump rewrites its Claude
+# listing, so it is released alongside, at the highest increment of the release
+# unless told otherwise with marketplace=<kind|version>. The Codex catalogue is
+# Git-backed and carries no copied versions, so it is validated by check.sh but
+# never rewritten by a release.
 . "$(dirname -- "${BASH_SOURCE[0]}")/lib.sh"
 
 DRY=0

@@ -34,6 +34,9 @@ send() {
 }
 
 echo "push:"
+# Publish plugin repositories first. The Codex marketplace resolves their
+# Git-backed `main` branches, so the catalogue must never arrive before the
+# plugin commits it exposes.
 while IFS= read -r n; do
   d="$(checkout_path "$n")"
   send "$n" "$d" "$(plugin_version "$d")"
