@@ -1,0 +1,1 @@
+- `swift-security` says how a spine-toolkit workflow calls it — as a triage, and as a lens that returns findings and writes nothing — scopes its report layout to an audit, and no longer describes a parallel Research consilium that never ran

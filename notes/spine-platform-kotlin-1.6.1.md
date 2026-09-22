@@ -1,0 +1,1 @@
+- `kotlin-security` says how a spine-toolkit workflow calls it — as a triage, and as a lens that returns findings and writes nothing — and drops the paragraph that told it to write into a stage file
