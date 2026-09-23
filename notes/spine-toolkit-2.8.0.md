@@ -1,0 +1,4 @@
+- every stage agent of a Method A run is told the core root: the orchestrator passes `plugin_root` to every profile, and each brief names it once, so `conventions/…` and `scripts/…` references — the brief's own and those in platform agent definitions — resolve without a search
+- new `scripts/long-run.sh` (`start`, `wait`, `stop`): a command that may run for minutes is waited out in slices that fit the tool limit, and `wait` tells a finished, a live, a hung and an over-budget command apart; the rule is `conventions/agent-tooling.md` → Long-running commands, and every brief points at it
+- new setting `[LONG_RUN] = [stall: <min>, max: <min>]` in `CLAUDE-spine-toolkit.md` with a `Task.md` override, default `stall: 5, max: 30`; an epic's keys reach its steps
+- the Outbound Contract gains `long_run` for every profile, and `plugin_root` is no longer EPIC-only
