@@ -1,0 +1,4 @@
+- a Method A profile script refuses a contract whose `plugin_root` is missing, relative or unexpanded (`${…}`): it returns `status: error`, `reason: no-plugin-root`, before any stage runs. The fallback that named core files against `<core root>` — and sent an agent searching the disk with `find /` — is gone
+- `scripts/resolve-settings.sh json` prints `plugin_root`, the core root it runs from, and the orchestrator takes the field from there like `long_run` instead of expanding `${CLAUDE_PLUGIN_ROOT}` by hand; it is not a setting, and `show` does not list it
+- the orchestrator's example contract carries `plugin_root`, and a `no-plugin-root` refusal is re-dispatched with the field filled, like `no-args`
+- nothing the platforms vendor moved, so none of them has to re-vendor
