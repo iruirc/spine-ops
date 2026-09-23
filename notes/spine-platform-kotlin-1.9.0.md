@@ -1,0 +1,4 @@
+- `kotlin-diagnostics` writes `## Regression Test` only when the task owes a test, and the bug-fix step of all three developers — `kotlin-compose-developer`, `kotlin-server-developer`, `kotlin-kmp-developer` — adds one only then, all branching on `spine-toolkit:test-authoring` → `## When the task owes no test`
+- the three developers drop "Write tests when `NEED_TEST=false` — `kotlin-*-tester` does": the tester never ran in that case, so the line promised a test that nobody wrote
+- the diagnostics roster's four testers drop the same unconditional promise, now writing the regression test "when the task owes one", and a new guard fails if that qualifier is ever removed from the roster
+- the core floor moves to `>=2.7.0 <3`, the version that added `## When the task owes no test`

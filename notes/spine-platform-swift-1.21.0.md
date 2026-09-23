@@ -1,0 +1,3 @@
+- `swift-diagnostics` writes `## Regression Test` only when the task owes a test, and `swift-developer`'s bug-fix step adds one only then — both branch on `spine-toolkit:test-authoring` → `## When the task owes no test` instead of assuming every bug fix gets one
+- the diagnostics roster's line for `swift-tester` drops the unconditional promise: it writes the regression test "when the task owes one", qualified the same way, and a new guard fails if that qualifier is ever removed from the roster
+- the core floor moves to `>=2.7.0 <3`, the version that added `## When the task owes no test`
