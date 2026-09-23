@@ -1,0 +1,4 @@
+- BUG Reproduce checks a root cause `Task.md` already names at file:line instead of finding it again: a red run and a check that the failure passes through that place, recorded under `## Root Cause` with a citation of `Task.md`. It investigates further only where the check does not match. At `lite` the `## Diagnosis` section takes the confirmed cause
+- at `full` the Diagnose panel's diagnostics lens takes a confirmed cause as established and looks for what it leaves open: the same defect at other call sites, and states under which the failure differs
+- Method B (`workflow-bug`) and the orchestrator's inline-content note say the same
+- nothing the platforms vendor moved, so none of them has to re-vendor
