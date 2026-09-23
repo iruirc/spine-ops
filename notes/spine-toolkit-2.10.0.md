@@ -1,0 +1,4 @@
+- `scripts/agent-metrics.sh` counts `usage` once per request, keyed by `requestId` and falling back to `message.id`. A request writes one transcript row per content block and every row repeats its input usage, so the old per-row sum overstated cache read about twofold: totals from earlier releases are not comparable with these
+- every agent and stage record in the JSON carries `reqs`, `cacheWrite`, `cacheRead` and their `cacheWriteText`/`cacheReadText` strings
+- the `agent-status` table gains `reqs`, `cache-w` and `cache-r` columns, and the orchestrator's stage line at `live` gains `cache-w` and `cache-r`. The `agent-monitor` panel is unchanged
+- nothing the platforms vendor moved, so none of them has to re-vendor
