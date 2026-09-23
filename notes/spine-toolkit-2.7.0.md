@@ -1,0 +1,7 @@
+- `need_test=false` now means the task adds no tests: no test file, no test case, and an existing test may be edited only when the change alters the very behaviour it asserts — written once in `spine-toolkit:test-authoring`, `## When the task owes no test`
+- FEATURE, BUG and REFACTOR agents receive the value in their brief, and the phased stage no longer demands a `tester` for such a task
+- a plan with a test phase under `false` stops before any phase runs — this is the behaviour change
+- BUG's Reproduce, Plan, Fix, Review and Done branch on the value
+- Review treats a new test under `false` as a blocking finding
+- an epic step now reports its own `[NEED_TEST]` and `[NEED_REVIEW]` back to the epic instead of inheriting the epic's — EPIC defaults to `false`, so a step used to be treated as owing no test regardless of its own Task.md
+- the orchestrator's Outbound Contract now states Method A passes `need_test` and `need_review` as JSON booleans
