@@ -1,0 +1,2 @@
+- `swift-validator`, `swift-tester` and `swift-diagnostics` run every test action with `-collect-test-diagnostics never`: `test_sim` gets it through `extraArgs` on any XcodeBuildMCP version, a direct `xcodebuild test` or `test-without-building` carries it itself. Without it one failing test made `xcodebuild` collect simulator diagnostics for up to ten minutes after the last test, writing nothing to the log
+- a new guard fails if an agent that runs tests loses the flag
