@@ -1,0 +1,7 @@
+- a rule the skills and agents disagreed about now has one owner, and every other place links to the owner's section in one form (`` `<skill>` → "<Section>" ``) that a test resolves: where `withContext` goes and what `Dispatchers.Main` is off Android, cancellation in error handling, the navigation boundary, one-shot effects, the ViewModel on Desktop and KMP, replacing `Dispatchers.Main` in tests, the test database, transactions on client and server, secret storage, interfaces, file layout, `expect`/`actual`, `List` stability, field injection, the DI container per target, retry statuses, where network errors are mapped, and token refresh on Ktor
+- the shared `catching` helper rethrows a cancellation a library swallowed, instead of returning it as a failure while the cancelled coroutine keeps running
+- ViewModel test samples are JUnit5 and replace `Dispatchers.Main` with an extension; `test-frameworks` has the rule, extension and listener for each framework
+- Ktor samples use the bearer provider as the token store, retry only idempotent requests on 408, 429, 502, 503 and 504, and keep the token on the API's own host
+- the server developer follows `- Architecture:` — Layered, Hexagonal or Clean Architecture — instead of assuming Layered
+- Kotlin samples marked for it compile in a Gradle sandbox — Android library, KMP, Spring Boot, Ktor, OkHttp and Retrofit modules — against one version catalog, the single source of the versions skills name
+- every test sample is named `method_condition_expected`
