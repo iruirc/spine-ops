@@ -64,7 +64,7 @@ Every command takes `-h`. The two read-only ones take nothing else.
 | `scripts/status.sh` | — | one table: version, highest tag, branch, ahead/behind, tree, and unreleased commits |
 | `scripts/check.sh` | — | the invariants nobody was checking. Exit 0 clean, 1 on a breach — the one to run in a hook or before a release |
 | `scripts/release.sh` | `<targets…> [--dry-run]` | bump, verify the bumped trees, commit, tag. Stops there. Exit 2 means the release notes are missing and names them |
-| `scripts/push.sh` | `[--dry-run]` | publish what release prepared: commits and each repository's release tag, nothing else |
+| `scripts/push.sh` | `[--dry-run]` | publish what release prepared: commits and every release tag origin lacks, nothing else |
 | `scripts/test.sh` | — | the suite under `tests/`, `bats-core` required |
 
 `tests/` covers the part of this repository where a wrong answer is silent — the semver arithmetic
@@ -143,6 +143,7 @@ nothing. A release nobody tested is the thing this exists to prevent, and a veri
 version before the bump tests something else.
 
 Pushing is separate. A tag on the remote is not withdrawn quietly, which is also why `push.sh` sends
-only the tag each manifest declares — any other local tag stays local. It pushes plugin repositories
+only release tags — a version whose commit is `chore: release <version>` on `main` — and every one
+origin lacks, so releases cut between two pushes are not left behind. Any other local tag stays local. It pushes plugin repositories
 before the marketplace, so Codex's Git-backed entries never become visible before their plugin
 commits do.

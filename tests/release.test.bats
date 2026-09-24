@@ -124,3 +124,22 @@ give_origins() {
   run git -C "$W/core.git" rev-parse -q --verify refs/tags/experiment
   [ "$status" -ne 0 ]
 }
+
+@test "push publishes every unpushed release tag, not only the current one" {
+  give_origins
+  "$W/ops/scripts/release.sh" core=minor >/dev/null
+  echo "- the next change" > "$W/ops/notes/core-1.2.0.md"
+  commit_all "$W/ops"
+  "$W/ops/scripts/release.sh" core=minor >/dev/null
+  # Named like a version but not a release commit: still somebody's scratch.
+  git -C "$W/core" tag 9.9.9 HEAD~1
+
+  run "$W/ops/scripts/push.sh"
+  [ "$status" -eq 0 ] || { echo "$output"; return 1; }
+  git -C "$W/core.git" rev-parse -q --verify refs/tags/1.1.0
+  git -C "$W/core.git" rev-parse -q --verify refs/tags/1.2.0
+  git -C "$W/market.git" rev-parse -q --verify refs/tags/1.1.0
+  git -C "$W/market.git" rev-parse -q --verify refs/tags/1.2.0
+  run git -C "$W/core.git" rev-parse -q --verify refs/tags/9.9.9
+  [ "$status" -ne 0 ]
+}
