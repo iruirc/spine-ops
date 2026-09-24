@@ -1,0 +1,4 @@
+- `swift-reviewer`'s Identify Scope reads the ranges its task prompt names, one per repository of the task — the project and every package checkout it touched — instead of falling back to its own `git rev-parse HEAD`; repository names in the ranges are relative to the project root
+- the Reviewed-commit line writes `[REVIEWED_COMMIT]` per repository, pasted from the `task-ranges.sh tips … --kind reviewed` lines the task prompt names, run right before the reviewer finishes, rather than assembled by hand
+- a new `## For Done` section holds findings that editing files inside the task folder closes without a code commit; they do not set `CHANGES_REQUESTED` on their own
+- the `spine-toolkit` floor moves to `>=2.12.0 <3`: the range convention `conventions/task-ranges.md` first appears there
