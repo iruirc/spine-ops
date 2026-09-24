@@ -1,0 +1,11 @@
+- after `CHANGES_REQUESTED` the new action `fix-review` turns Review's findings into one plan phase, "Review fixes n", then Validation → Review of the fixes → Done
+- `auto` runs it by itself up to `[FIX_ROUNDS]` rounds (default 2, `0` off) and then asks
+- `manual` offers it first, with a choice of findings
+- a catch-up stopped at `CHANGES_REQUESTED` now goes on with `fix-review`
+- a Review whose run commits code first now reads its ranges without the (now stale) commit counts — this also changes the Review brief of an ordinary Execute→Review run
+- a `CHANGES_REQUESTED` return carries `blocking_findings` and `done_findings`
+- a prior Critical/Major still open or regressed is a finding of the re-review
+- `auto` never exceeds `[FIX_ROUNDS]` rounds in one session whatever `Plan.md` shows
+- known limit: a catch-up stopped at `CHANGES_REQUESTED` before its Done counts the original run's fix rounds
+- minor because of the new action, three contract fields and a new setting
+- nothing the platforms vendor moved, so none of them has to re-vendor
