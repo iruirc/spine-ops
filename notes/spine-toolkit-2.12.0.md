@@ -1,0 +1,9 @@
+- Review reads the ranges the orchestrator computes per repository — first pass the whole task from `Base.md`, re-review only the commits since the last Review, checkouts included
+- a task without a recorded base falls back to the merge base with its main branch; where that is HEAD itself (work already on main) the repository reads as having no known base, and Review reviews the task's own commits there — so a legacy task's first Review may warn about untouched dependencies too
+- Base.md is recorded only before any plan phase has landed
+- `done_findings` — a finding Done closes in the task's files no longer blocks Done
+- new action `catch-up` for commits after Done (Validation → incremental Review → Done), offered first by State Detection; it needs Done.md and stops with a message when nothing landed after Done; resumed after CHANGES_REQUESTED with `catch-up` again
+- new `scripts/task-ranges.sh` and `conventions/task-ranges.md`; the first record line of a repository wins
+- known limits: EPIC steps run by an epic get no ranges yet; the legacy-task catch-up warning says "the whole task" even where Review ends up on the task's own commits
+- minor because of the new action, contract field and record format — old tasks fall back to the merge base and the whole task
+- nothing the platforms vendor moved, so none of them has to re-vendor
