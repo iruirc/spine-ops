@@ -1,0 +1,7 @@
+- new task type `QUICK`: Edit → Validation → Review → Done, for a small change `Task.md` already locates; `[NEED_REVIEW] = [false]` drops Review
+- Edit checks the task against the code first — at most two production files, no public API or package boundary, nothing on the security perimeter, the change named in `Task.md` — and on a miss changes nothing and asks the user to retype the task
+- Edit writes a one-phase `Plan.md`, so `fix-review` and `catch-up` work for QUICK unchanged
+- a QUICK task is always `lite`; its defaults are `[NEED_TEST] = [false]`, `[NEED_REVIEW] = [true]`
+- `task-new` sets QUICK only when the user names the type, never for a step; an epic refuses an open QUICK step
+- minor because of the new type, profile and workflow
+- nothing the platforms vendor moved, so none of them has to re-vendor
