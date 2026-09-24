@@ -1,0 +1,4 @@
+- a task with no `Base.md` takes the nearest merge base over the local and `origin`'s main branch, so unpushed commits of a local `main` stay out of its first Review
+- every Done records `[REVIEW_FIXES] = <n>` in `Done.md` (from `task-ranges.sh tips --kind done`); `auto` counts fix rounds only above it, so a catch-up stopped at `CHANGES_REQUESTED` before its Done gets rounds of its own
+- a `Done.md` written before 2.13.1 keeps the old count, from the last `Catch-up: commits after Done` row
+- nothing the platforms vendor moved, so none of them has to re-vendor
