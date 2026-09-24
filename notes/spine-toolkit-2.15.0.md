@@ -1,0 +1,6 @@
+- an epic step can be `QUICK` when the user typed it so: it runs directly and inside the epic walk, always at `lite`
+- the only guard is at creation: an epic Plan that returns a QUICK step has the architect retype it on disk once, and stops before Execute if QUICK is still there; the orchestrator's `error_quick_step` and `task-new`'s `quick_not_for_steps` are gone
+- `task-new` types a step QUICK by the same rule as a root task — only when the user names the type
+- a QUICK step whose entry check fails inside the epic walk is a failed step, not a completed one, and is not ticked in the epic's `Plan.md`
+- minor because a new step type is accepted
+- nothing the platforms vendor moved, so none of them has to re-vendor
