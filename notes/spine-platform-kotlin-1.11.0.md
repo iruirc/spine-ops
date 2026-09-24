@@ -1,0 +1,9 @@
+- `## Stack` lines are written with the axis's line label (`- Target:`, `- DI:`, `- Tests:` …), never with a question's label; `/setup` rewrites a line written with one (`- Target surface: Android` → `- Target: Android`) and reports it
+- the `baseline` axis knows `API 23+` — the floor of current AndroidX — and `JVM 25`; `API 21+` stays for existing projects
+- an http4k build resolves to `target=Server`
+- on a Server, the framework decides DI: Spring Boot writes `- DI: Spring` without asking, Micronaut and Quarkus ask nothing and write no line; a KMP module is no longer asked `framework` or `async`
+- `architecture-choice` writes `- Architecture:` and `- DI:` as catalog values from one table, reads `- Target:` instead of asking it, asks before replacing a different `- DI:`, and writes no comment or objection into the config
+- `/kotlin-init` asks exactly the axes `/setup` would, generates from its answers rather than from config lines, generates Gradle KTS only, no longer offers kotlinx-cli or `API 21+`, and passes setup only what it asked
+- agents no longer recommend Kodein; the Compose developer says what a Views project gets
+- a KMP module answered "no UI" by `/kotlin-init` reaches setup as `ui` = `none` and gets no `- UI:` line and no later UI question; `commonMain/` flags `ui` only when a Compose import is present
+- a service on Micronaut or Quarkus no longer flags the `di` axis: the heuristic flags it only for classes registered with Hilt, Koin, Dagger or Spring
