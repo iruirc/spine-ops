@@ -1,0 +1,10 @@
+- the OkHttp token refresh runs on a client with its own dispatcher; a refresh the server refuses returns the original 401, any other failure an `IOException`: the old sample deadlocked at five parallel 401s
+- HTTP samples are on Spring Boot 4 and Jackson 3: `JsonMapperBuilderCustomizer`, `RestClient` timeouts through Boot's request factory, `spring-boot-starter-restclient`; the skills say what Jackson does without the Kotlin module in a Boot build
+- `net-openapi` teaches the generator build that compiles: `suspend` calls returning `Response<T>`, the serialization plugin, `outputDir.set(generated)`; Ktor derives a spec from routing since 3.4
+- a nested Exposed `suspendTransaction` joins the outer one, and the skill says how it fails: an `SQLException` rolls back the whole transaction at once; samples are on Exposed 1.x and Testcontainers 2
+- the zero-downtime migration adds a constraint `NOT VALID` and validates it in a separate migration; `CREATE INDEX CONCURRENTLY` runs alone, with a `.sql.conf` and Flyway's session lock, without which it hangs
+- Flyway on Boot 4 is `spring-boot-starter-flyway` plus the unversioned database plugin; SQLDelight and Room migration tasks and fallbacks are corrected
+- SQLDelight samples build: `import kotlin.Int;`, `IntColumnAdapter`, adapters by name, foreign keys switched on; Room 3 is named for KMP and web
+- Spring DI tests use the Boot 4 slice modules and `@MockitoBean` or `@MockkBean`; `kotlin-reflect` and the final-class proxy failure are explained; Jib runs beside the configuration cache
+- server agents give Clikt's exit code 1 and kotlinx-cli's 127, map security checks to OWASP Top-10 2025, and place `@Transactional` by the project's architecture
+- 189 Kotlin blocks compile in the sandbox, and a test holds that floor
