@@ -1,0 +1,9 @@
+- the Gradle modules guide builds on AGP 9: no `kotlin.android`, `CommonExtension` without type arguments, one catalog, JUnit 5 wired with the launcher and the vintage engine so JUnit4 Compose and Robolectric tests keep running; KMP modules use the AGP 9 Android target
+- `kotlin-init` offers `API 24+` and `API 26+` for Android and KMP: navigation-compose, Navigation 3 and WorkManager need 24
+- DI samples compile against Hilt 2.60 and Koin 4.2: `hiltViewModel` from `hilt-lifecycle-viewmodel-compose`, the Koin Compiler Plugin, `KoinApplication(configuration = …)`, assisted factories that do not take a value class
+- Navigation 3 is presented as stable, with a ViewModel per entry, desktop Esc as system back, and a deep link that arrives before sign-in survives process death: the pending route lives in a ViewModel's `SavedStateHandle`
+- MVI samples are on Orbit 12, and no skill says a desktop window has no lifecycle; Spring transaction facts in the Layered and Hexagonal skills match what spring-tx does
+- coroutine facts are corrected: a Ktor disconnect cancels a handler only with `cancelCallOnClose` on CIO or Netty, a handler on `scope.launch` does run, `runTest` times out instead of hanging
+- the Compose stability guide quotes the report Kotlin 2.4 writes; the error guide's cancellation test covers a library that swallows the cancellation
+- release skills add Play's target API 36 and 16 KB page-size rules, `fetch-depth: 0` for versioning from tags, and read build inputs through `providers`
+- 147 Kotlin blocks compile in the sandbox, which now builds Hilt in an application module and `commonMain` without the JDK
