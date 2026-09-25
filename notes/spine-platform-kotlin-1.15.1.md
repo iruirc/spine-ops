@@ -1,0 +1,1 @@
+- every validator takes `drive_app` and `manual_checks` from the stage brief when it names them, and walks `Task.md` → `CLAUDE-spine-toolkit.md` only for a field the brief does not name: a run told `drive_app=off` no longer drives the app because the project files say `auto`
