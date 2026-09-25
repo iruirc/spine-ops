@@ -1,0 +1,6 @@
+- the README counts thirty knowledge skills and six manifest tables, and a test holds both counts; the manifest and the development guide name `## Driver` as the optional sixth table
+- the README names no driver: Android and desktop apps are driven by the one the project resolved
+- the plugin description names CLI tools, as the Codex manifest and the README do
+- no skill or agent promises a command, release or skill the plugin does not have, and a test keeps those phrases out; the reviewer drops the branch for a core below the floor
+- `net-http-clients` says once what Jackson does without the Kotlin module: a nullable field reads as `null` with no error, a non-null one fails
+- `persistence-jvm-orm` links the Exposed dispatcher rule and says what a misplaced `@Transactional` costs; the Koin test root links `di-koin`
