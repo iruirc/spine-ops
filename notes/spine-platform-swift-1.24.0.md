@@ -1,0 +1,1 @@
+- a build of the app and a run of the whole suite go through `long-run.sh` as `xcodebuild`, where a silent run is caught; `test_sim` stays for one class or target

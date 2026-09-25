@@ -1,0 +1,4 @@
+- the orchestrator snapshots the session's processes and every root's `git status` before a stage and compares after it — also after an error, an interrupted run and its own `TaskStop` — and shows what the stage left behind; it stops or restores only what the user picks
+- under Method A a background watch wakes the orchestrator when an agent's MCP call has had no answer for longer than `long_run.stall`
+- new `scripts/stage-leftovers.sh`; `long-run.sh start` records each job with its session so a detached one is still found
+- nothing the platforms vendor moved, so none of them has to re-vendor

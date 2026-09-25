@@ -1,0 +1,1 @@
+- `## Procedure` says WebDriverAgent cannot be closed through the server and is safe to stop after a run
