@@ -1,0 +1,2 @@
+- a stage removes the `test_sim` packages it built when it ends, and reuses one through `testProductsPath` only for a repeat of the same `-only-testing` selector while nothing the build reads has changed
+- new `SessionStart` hook: in a spine project, once a day, deletes `test_sim` packages older than a day from every XcodeBuildMCP workspace; works with `xcodebuildmcp` and `mobilebuildmcp`
