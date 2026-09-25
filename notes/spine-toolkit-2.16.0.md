@@ -1,0 +1,4 @@
+- the driver vocabulary gains `drag` — press, hold, move and release without lifting — in the input group; 33 capabilities
+- `swipe`, `gesture` and `drag` are defined in one sentence: `gesture` is several fingers at once, a pinch or a rotation, and no longer stands in for a press-and-drag
+- minor because the vocabulary grew; a driver that declares `drag` needs this core as its floor
+- nothing the platforms vendor moved, so none of them has to re-vendor

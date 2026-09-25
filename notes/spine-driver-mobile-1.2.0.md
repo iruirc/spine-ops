@@ -1,0 +1,2 @@
+- `gesture` is declared on no surface: the published `mcp-devices` has no multi-touch input, so a case that needs a pinch goes to a person at Plan instead of failing mid-Validation
+- `## Procedure` says that taps the app reads as one sequence go in one `flow` batch with hints off, and that raw `x`/`y` are read in the last full screenshot's pixels, or as device coordinates before one and after a diff capture

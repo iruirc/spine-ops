@@ -1,0 +1,2 @@
+- `drag` is declared on `ios-simulator`, `ios-device`, `android-emulator` and `android-device`, where `gesture drag` holds the source before moving; checked against agent-device 0.21.14
+- the core floor moves to `>=2.16.0 <3`, the first core whose vocabulary names `drag`
