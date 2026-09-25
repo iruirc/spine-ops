@@ -1,0 +1,4 @@
+- a refresh of `Walkthrough.md` removes the section of a commit a reset or a squash dropped and records the loss in `## Plan vs. outcome` with the new trigger `history`
+- new `scripts/lint-walkthrough.sh` checks every commit `## Commits` names against the task's history; the writer runs it last, and the orchestrator runs it at the stage boundary and sends the file back once
+- `task-ranges.sh unreachable` names the shas no repository of the task holds
+- nothing the platforms vendor moved, so none of them has to re-vendor
