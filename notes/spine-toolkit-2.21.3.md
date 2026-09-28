@@ -1,0 +1,4 @@
+- an epic step that did not reach its end — failed Validation, `CHANGES_REQUESTED`, an unreproduced bug or any other `ask_user` hand-back, and a REVIEW step that requested changes — now stops the walk as a failed step instead of being ticked in `Plan.md` and built on
+- an epic run holding both Plan and Execute reads its steps off disk before pushing them, so each step gets its own resolved settings instead of the epic's
+- the artifact budget check after an approved REVIEW runs at the task's new `Tasks/DONE/` path instead of exiting 2 on the old one
+- nothing the platforms vendor moved, so none of them has to re-vendor
