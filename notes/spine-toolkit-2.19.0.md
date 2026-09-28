@@ -1,0 +1,6 @@
+- the walkthrough is refreshed after Done's own commits, not before them; Done no longer edits `Walkthrough.md`, and hands its Review items about the file to the writer, which closes them only by changing the file; with no walkthrough written, Done closes them itself
+- `scripts/lint-walkthrough.sh` also reports a section the file's depth always carries, a `deep` section naming no commit or several, a commit of the header's ranges the body never names, a header count the range does not hold, and a range in the file no repository holds; every finding reads `Walkthrough.md: <class>: <what> (<where>)`. `## Glossary` and `## How it works` stay optional
+- the header's `Range` is now defined as the task's first and last commit, both included, and `Commits` as counted along the first parent
+- the orchestrator's keys `walkthrough_unreachable_commit` and `walkthrough_unreachable_persists` are now `walkthrough_lint_finding` and `walkthrough_lint_persists`
+- `task-ranges.sh commits` lists a declared range along the first parent, leaving out commits that touch only another task's folder
+- nothing the platforms vendor moved, so none of them has to re-vendor
