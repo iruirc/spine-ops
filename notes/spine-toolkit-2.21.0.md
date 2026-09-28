@@ -1,0 +1,5 @@
+- the walkthrough writer no longer runs after a Done that left it nothing to do: when `Walkthrough.md` already names the task's newest commit, Done committed nothing outside the Tasks folder and no Review item was handed to the writer, the run skips it and says so in one line
+- `scripts/lint-walkthrough.sh --current` answers whether the file names each repository's newest own commit; `scripts/task-ranges.sh last` prints those commits
+- the outbound contract carries `walkthrough_current`, measured by that lint before the dispatch; Method B asks the same lint after Done
+- Done's result carries `committed_outside_tasks`
+- nothing the platforms vendor moved, so none of them has to re-vendor
