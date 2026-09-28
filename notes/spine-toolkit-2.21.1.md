@@ -1,0 +1,2 @@
+- an epic's `Walkthrough.md` is now written after its Done agent rather than before it, and Done is told never to edit the file: what Done commits outside the Tasks folder, such as a regenerated docs progress table, is inside the range by the time the writer runs
+- nothing the platforms vendor moved, so none of them has to re-vendor
