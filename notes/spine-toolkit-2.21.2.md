@@ -1,0 +1,3 @@
+- a QUICK or lite step of an epic whose step reader returns no walkthrough depth now falls back through the same chain as `resolve-settings.sh` instead of inheriting the epic's own depth, so it gets no walkthrough
+- `workflow-epic` no longer claims a QUICK step inherits the epic's scale
+- nothing the platforms vendor moved, so none of them has to re-vendor
