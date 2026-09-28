@@ -1,0 +1,4 @@
+- the open-questions gate shows each open item whole, sub-items included, and reads numbered lists too — `Designer questions` and `Backend questions` were never seen before
+- a sub-item marked `(recommended)` is offered as a one-click answer; the key `stage_done_dialog_answer` is replaced by `stage_done_dialog_accept`, and a free-form answer comes through the question's own free-text option
+- `scripts/open-questions.sh` collects the items; rule 5 of `task-documents` and the `Known unknowns` template of `feature-requirements` say how options and a recommendation are written
+- nothing the platforms vendor moved, so none of them has to re-vendor
