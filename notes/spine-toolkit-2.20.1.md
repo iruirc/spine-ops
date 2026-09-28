@@ -1,0 +1,6 @@
+- the `**Run:**` line stays one line: every run of whitespace in the directive becomes one space there, while the directive's own block keeps it verbatim
+- `scripts/lint-artifact-lang.sh` leaves the `**Run:**` line out of the prose it measures, so a long directive in another language no longer fails an artifact
+- `scripts/resolve-settings.sh show --set` names every value the run set, one equal to the built-in default included
+- an epic hands a pending step the scale a pushed one would run at: a run's `full` raises the step's own `lite`, and a QUICK step is `lite`
+- re-applying a `Run.json` no longer repeats a directive the file already ends with
+- nothing the platforms vendor moved, so none of them has to re-vendor

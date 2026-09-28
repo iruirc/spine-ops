@@ -1,0 +1,1 @@
+- `kotlin-jvm-validator` and `kotlin-server-validator` no longer speak of a simulator or device they do not have; they name what the owner's directive can pick for them instead
