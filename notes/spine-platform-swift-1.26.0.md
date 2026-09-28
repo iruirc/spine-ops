@@ -1,0 +1,1 @@
+- `swift-validator` takes the simulator or device the owner's directive names over a pre-set one and over the project's files, for packages too

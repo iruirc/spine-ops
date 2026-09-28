@@ -1,0 +1,5 @@
+- what the owner says for one run beyond the choice of stages now reaches the stage agents under both methods: a phrase a setting decides becomes an override of that setting for the run, and the rest goes to every agent verbatim as the owner's directive
+- `scripts/resolve-settings.sh json|show` take `--set <field>[.<key>]=<value>`, a first link of the chain for every field a `Task.md` can name; a run's `lite` never lowers a `[SCALE] = [full]` a task file carries
+- the Outbound Contract carries `user_directive` and `run_settings`, always; every stage may return `directive_declined`, which reaches `stages[]`, and an auto epic reports its steps' refusals in its notes
+- the orchestrator keeps a run's own words in `Run.json` until its range is done — only the overrides the resolver applied — asks about one it finds in a new session, and ignores one git tracks
+- nothing the platforms vendor moved, so none of them has to re-vendor

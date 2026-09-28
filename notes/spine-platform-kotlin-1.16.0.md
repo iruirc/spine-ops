@@ -1,0 +1,1 @@
+- the three validators let the owner's directive outrank the project's files, and `kotlin-ui-validator` takes the device or emulator it names over the first one `adb` lists
