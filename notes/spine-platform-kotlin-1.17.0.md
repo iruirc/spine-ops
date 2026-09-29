@@ -1,0 +1,1 @@
+- the device a brief names outranks the first one `adb devices -l` lists and the one the project's files name; `kotlin-ui-validator` passes an adb serial as `ANDROID_SERIAL`, boots any other value as an AVD, runs `connectedDebugAndroidTest` and drives the app on it; a device the owner's directive names still outranks the brief's
