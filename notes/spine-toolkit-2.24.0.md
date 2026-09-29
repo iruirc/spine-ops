@@ -1,0 +1,3 @@
+- the orchestrator's progress report names facts instead of rendering templates: for the opening block, each dispatch, each stage report and the close, `## Progress reporting` lists what the reply must say, in the run's language and in any form
+- fifteen keys leave both orchestrator locales (`progress_open_*`, `progress_dispatch`, `progress_stage_report|artifact|verdict`, `progress_run_elapsed`, `dispatch_method_a|b`, `info_run_setting`, `info_run_directive`); the `live` figures and every warning stay templates
+- nothing the platforms vendor moved, so none of them has to re-vendor
