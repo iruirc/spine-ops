@@ -1,5 +1,5 @@
 - the device every build, test and drive of a stage runs on is a setting: `[DEVICE]` in the config, in a `Task.md`, or for one run ("validate it on <device>" is `--set device=<device>`); `auto` by default
 - `[DEVICE_SOURCE]` names a project command that prints the device; each stage runs it at its start, so one clone of a repository runs on its own device without a commit, and a device changed between stages is the one the next stage uses
-- every brief carries the device in the words `conventions/stage-dispatch.md` → Device gives, and says nothing at `auto` with no command; an epic hands each step its own device
-- `scripts/resolve-settings.sh --set` takes a value with spaces inside
+- every brief carries the device in the words `conventions/stage-dispatch.md` → Device gives, and says nothing at `auto` with no command; a named device says where it was set (the contract's new `device_from`), and an epic hands each step its own device and origin
+- `scripts/resolve-settings.sh --set` takes a value with spaces inside; `auto` is read in any case and `-` as `—`, and a `[DRIVER]` with a space in it is refused
 - nothing the platforms vendor moved, so none of them has to re-vendor
