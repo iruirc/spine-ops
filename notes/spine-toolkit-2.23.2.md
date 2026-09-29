@@ -1,0 +1,2 @@
+- `setup` backs up `CLAUDE.md` only when it inserts the `@./CLAUDE-spine-toolkit.md` line; a file that already has it is left alone and gets no `CLAUDE.md.bak`, which a Swift workspace used to commit with its meta-repo
+- nothing the platforms vendor moved, so none of them has to re-vendor

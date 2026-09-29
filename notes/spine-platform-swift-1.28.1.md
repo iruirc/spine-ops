@@ -1,0 +1,3 @@
+- `swift-validator` drives a pinch or rotation as `gesture` and a press held while moving as `drag`, never as a `swipe`; a surface whose driver declares neither turns that step into a manual case
+- `wsyml::validate` reports a duplicate package name once and no longer adds an invalid archetype and version joined from both entries
+- `workspace-add` asks the git URLs, version, deps and external deps from locale keys, and `workspace-init` the git URLs and external deps; the English dependency-exception question no longer says "a engine"

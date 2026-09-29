@@ -1,0 +1,1 @@
+- `kotlin-ui-validator` drives a pinch or rotation as `gesture` and a press held while moving as `drag`, never as a `swipe`; a surface whose driver declares neither turns that step into a manual case
