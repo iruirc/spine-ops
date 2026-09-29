@@ -1,0 +1,4 @@
+- the run's opening block is printed by a script: `resolve-settings.sh open` writes the profile, task, range, `Progress` and method, the range's stages and roles, `/workflows`, each run setting as `from → to`, the owner's directive verbatim, the `live` panel and the settings column, in the run's language; the orchestrator shows it as it is before the first dispatch, under Method A and Method B alike
+- a step an epic hands back gets its epic's directive in the block through `open --run-file`; a profile chosen by `fallback_profile_question` reaches it through `open --profile`
+- twelve `open_*` keys join both orchestrator locales; `show` and `json` print what they printed
+- nothing the platforms vendor moved, so none of them has to re-vendor
