@@ -1,0 +1,4 @@
+- the run's opening block is shown by the host: a `PreToolUse` hook on the orchestrator's `Workflow` and `Skill` dispatch runs `resolve-settings.sh open` on the call's own args and prints its output before the call, once per task in a turn; the orchestrator no longer prints it or retells it
+- `resolve-settings.sh open --contract <file|-> --method A|B` reads every fact of the run from the Outbound Contract, in either encoding
+- the Outbound Contract gains `progress` and `method_reason`; no stage reads them
+- nothing the platforms vendor moved, so none of them has to re-vendor
