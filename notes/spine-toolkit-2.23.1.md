@@ -1,0 +1,2 @@
+- `conventions/agent-tooling.md` → Long-running commands says where a stage agent's logs go: leave out `--log`, or put named logs in one `mktemp -d` directory — never a fixed path such as `/tmp/v<task>.log`, which two clones running the same task at once both write
+- nothing the platforms vendor moved, so none of them has to re-vendor
