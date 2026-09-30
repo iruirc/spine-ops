@@ -1,0 +1,3 @@
+- new `scripts/lint-manual-checks.sh <ManualChecks.md>` names every case with no `(file:line)` reference, which `## Grounding` requires; Validation runs it after writing the file, and again after the revision that follows the cold read
+- that revision now also reads each case's `**Scene:**` against its first step and its steps against each other
+- nothing the platforms vendor moved, so none of them has to re-vendor
