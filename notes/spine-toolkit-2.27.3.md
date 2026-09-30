@@ -1,0 +1,2 @@
+- the Validation brief, and Method B's Validation line, name the refresh's diff command verbatim: the changed files are what `git diff --name-only <COVERS>..HEAD` prints, never one commit's
+- nothing the platforms vendor moved, so none of them has to re-vendor
