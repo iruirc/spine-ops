@@ -1,0 +1,2 @@
+- after a return that completes Done, the orchestrator commits the task folder itself — one `docs` commit, `Run.json` excluded; a folder outside git or ignored by it is left uncommitted with `info_task_docs_uncommitted`. Done no longer commits it in one run and leaves it untracked in the next
+- nothing the platforms vendor moved, so none of them has to re-vendor
