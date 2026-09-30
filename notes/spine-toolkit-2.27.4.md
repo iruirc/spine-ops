@@ -1,0 +1,2 @@
+- Method B's `Long-running commands:` line is given verbatim in `conventions/stage-dispatch.md`, so the orchestrator no longer composes a `long-run.sh` form the script rejects
+- nothing the platforms vendor moved, so none of them has to re-vendor
