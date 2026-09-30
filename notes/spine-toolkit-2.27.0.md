@@ -1,0 +1,6 @@
+- a `ManualChecks.md` case builds its own checkable scene, steps through a table with what the screen shows after each action, may carry a `**Wrap-up:**`, and grounds every behaviour claim in the code with a `(file:line)` gloss; a case whose failure looks like its success is deleted
+- `## Preparation` holds the environment and a dictionary of actions, `## Scope` says what BLOCKED means, and an optional `## Charter` closes the file; a case may run to 40 lines (20 at `lite`)
+- after a passed Validation that wrote or changed the file, a fresh validator reads only `ManualChecks.md`, walks every step and names what it could not execute; the author revises once. New setting `[MANUAL_CHECKS_CHECK] = on|off`, default `on`
+- a rerun Validation refreshes the file against `[COVERS]..HEAD`, re-checking the cases whose code moved and those with no code reference; moving `[COVERS]` alone is no change and walks nothing
+- each `## Manual acceptance` line of a plan states what must be true and what changed to make it so
+- nothing the platforms vendor moved, so none of them has to re-vendor
