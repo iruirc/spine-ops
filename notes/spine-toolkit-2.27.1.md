@@ -1,0 +1,4 @@
+- `manual-checks`: the symbol rule covers the cells of the steps table; at `lite`, `## Scope` and `## Charter` keep their ceilings
+- Method B's Validation refreshes a `ManualChecks.md` behind HEAD by `## Refreshing`, as Method A's brief does
+- the `[MANUAL_CHECKS_CHECK]` entry in `docs/configuration.md` and the orchestrator's `manual_checks_check` paragraph say "holding a case" and leave the protocol to the skill
+- nothing the platforms vendor moved, so none of them has to re-vendor
