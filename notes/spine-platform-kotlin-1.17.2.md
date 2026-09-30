@@ -1,0 +1,1 @@
+- `kotlin-reviewer` → Testing Adequacy names `spine-toolkit:test-authoring` → `## Review` instead of restating its findings, so which of them block follows core

@@ -1,0 +1,4 @@
+- `test-authoring` → `## Review`: an assertion that cannot fail — an expected value produced by the same code the assertion checks included — and a double standing in for the behaviour under test always go into `blocking_findings`, at Major or above; the other three findings may
+- every Review brief and every `workflow-*` skill judges the tests a task added by that section instead of a copy of it; `workflow-test` drops its own criteria
+- `test-authoring` orders the doubles (the real collaborator, then a fake, then a stub; a spy or mock only where the call is the behaviour, a query never verified), keeps them behind types the project owns, leaves a project's own mocking style where it already is, lets a test be named by behaviour, and takes an expected value from a literal or a builder the test owns — a test marked as characterizing excepted
+- nothing the platforms vendor moved, so none of them has to re-vendor
