@@ -1,0 +1,5 @@
+- the driver ships its MCP server: `.mcp.json` runs `claude-in-mobile@4.4.1` through `npx`, and Claude Code and Codex CLI start it when the plugin is installed; in Codex its tools are approved without a question per call
+- a Codex manifest; the driver manifest stays out of the skill list
+- `WDA_PATH` reaches the server through the plugin's `env_vars`
+- the manifest treats a platform the server did not load as a setup step and gives `mcp-devices install <name>`
+- README: on iOS `claude-in-mobile@4.4.1` cannot read the accessibility tree (a `"label": null` from WebDriverAgent; fix in AlexGladkov/claude-in-mobile#74) — taps and screenshots work, reading and asserting do not; Android is not affected. How to run a build of the server of your own, in Codex and in Claude Code

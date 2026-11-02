@@ -1,0 +1,9 @@
+- installs in Codex CLI from the `iruirc` marketplace; `runtimes/codex-cli/` carries the rules `setup` writes into the project — Gradle, `adb` and the emulator out of the sandbox — and the MCP server list it approves
+- new internal skill `gradle-toolchain`: the agents pick the JDK and SDK the way Android Studio does (`java_home` on macOS) and stop at a failure the environment causes instead of installing around it
+- the manifest declares `.kotlin/` under `## Build traces`, so spine-toolkit 2.29.0 leaves it out of the leftovers check
+- `kotlin-setup` reads the stack from the project before asking
+- reads the project config from `SPINE.md`, falling back to `CLAUDE-spine-toolkit.md`
+- `kotlin-ui-validator` looks a hyphenated driver prefix up the way Codex names its tools; validators name the log in `Validation.md` instead of pasting it whole, and fail a step that never produced its evidence
+- `kotlin-architect`: FEATURE Research follows the security lens, it is not a panel; role bodies drop the Claude-only dispatch line
+- README: install and run Spine in Codex CLI, the build traces block, how to run the snippet compile suite; `AGENTS.md` says how Codex reaches the agents and which skills are internal
+- `conventions/i18n.md` re-vendored from spine-toolkit 2.29.0

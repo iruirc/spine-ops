@@ -1,0 +1,7 @@
+- installs in Codex CLI from the `iruirc` marketplace; `runtimes/codex-cli/` carries the rules `setup` writes into the project — `xcodebuild`, `xcrun simctl` and `xcrun xcresulttool` out of the sandbox; `swift-validator` says to call `simctl` unwrapped so the rule sees it, and to keep a one-off `swiftc`'s module cache in a writable root — and the MCP server list it approves
+- reads the project config from `SPINE.md`, falling back to `CLAUDE-spine-toolkit.md`
+- `swift-validator` looks a hyphenated driver prefix up the way Codex names its tools, and names the log in `Validation.md` instead of pasting it whole
+- validators fail a step that never produced its evidence; a rerun excuses an invocation error, never a failing build or test
+- an implementing stage writes no file of its own; Diagnose in `swift-diagnostics` writes none either, the synthesis writes `Research.md`; role bodies drop the Claude-only dispatch line
+- README: install and run Spine in Codex CLI; `AGENTS.md` says how Codex reaches the agents
+- `conventions/i18n.md` re-vendored from spine-toolkit 2.29.0

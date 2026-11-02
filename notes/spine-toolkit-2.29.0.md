@@ -1,0 +1,10 @@
+- Codex CLI runs Spine: the same orchestrator, profiles and workflow skills, with what differs per host in `runtimes/claude-code` and `runtimes/codex-cli` — agents dispatched as Codex subagents, a question asked through the `request_user_input` menu or as numbered text, a long build waited on through `long-run.sh`, a driver's tools found in `ALL_TOOLS` by their prefix. Claude Code works as before
+- `SPINE.md` is the project config; a project set up earlier keeps `CLAUDE-spine-toolkit.md` and is read the same way until `setup` renames it
+- a runtime axis for models and effort: the model vocabulary and defaults come from `runtimes/<id>.json`; under Codex a Claude model name in the config reads as `session`, and the orchestrator names the config's Claude models once
+- `setup`: in a configured project it first asks whether to reconfigure, with Cancel first; one question covers every Codex permission — `codex-permissions.sh` writes the rule files for Spine's and the platform's commands, approves the platform's MCP server and writable roots, the commit rule and the question menu, and keeps `config.toml` line endings; a configured platform that is not installed is named
+- a driver ships its MCP server in `.mcp.json`: `lint-driver-manifest.sh` keeps it in step with the driver's namespace, wants a pinned server version and rejects a `${…}` env value, which Codex passes literally; `conventions/driver-contract.md` says when Claude Code suppresses a plugin's server
+- the leftovers check after each stage leaves out the folders a platform declares under `## Build traces`
+- task documents are committed into a tasks repository of their own, and the run leaves the task folder where it found it
+- a step's `Task.md` holds no empty Stack, Logs or StackTrace; the Write stage of `workflow-test` writes no `Write.md`; a fan-out axis is read from the config even when the task did not need it
+- `long-run.sh` tells a refused signal from a missing process; `start` exits 2 on a budget, which goes to `wait`
+- `conventions/i18n.md` moved (step 1 reads `SPINE.md`); both platforms released alongside carry its new hash

@@ -1,0 +1,4 @@
+- the driver ships its MCP server: `.mcp.json` runs `agent-device@0.21.23 mcp` through `npx`, and Claude Code and Codex CLI start it when the plugin is installed; in Codex its tools are approved without a question per call
+- a Codex manifest; the driver manifest stays out of the skill list
+- the manifest says the pinned server moved past 0.21.14, the version its tables were checked on
+- README: when Claude Code suppresses the plugin's server; the project config is `SPINE.md`
