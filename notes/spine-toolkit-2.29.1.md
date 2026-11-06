@@ -1,0 +1,4 @@
+- `long-run.sh start` refuses to start a second job from the folder where one still runs (exit 2, naming the first job's pid and log): two builds sharing derived data corrupt each other. A job started with `--parallel` — a log stream, an emulator, a server — neither waits nor blocks a build; a registry line whose pid now belongs to another process is not a running job
+- `scripts/lint-i18n.sh` accepts the Russian `AGENTS.md` stub and runs as a test
+- `setup`: the question about the platform's Codex rules names the emulator as well as the simulator
+- `runtimes/codex-cli.md` and the README say that Codex asks to trust Spine's hooks again after every update, and why the skill list shows `source-command-setup`

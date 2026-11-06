@@ -1,0 +1,3 @@
+- `swift-validator` copies the logs `Validation.md` names into the task folder's `validation-evidence/<timestamp>/`, one folder per Validation run, and names each copy by its path relative to the task folder — a log in a temporary folder did not outlive the session
+- `workspace-add`, `workspace-docs-regen` and `workspace-init` pass `$ARGUMENTS` to their skills, so Codex no longer lists a second `source-command-workspace-*` skill for each
+- `scripts/lint-i18n.sh` re-vendored from spine-toolkit 2.29.1

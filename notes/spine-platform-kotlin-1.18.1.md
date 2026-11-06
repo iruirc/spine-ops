@@ -1,0 +1,2 @@
+- `kotlin-jvm-validator`, `kotlin-server-validator` and `kotlin-ui-validator` copy the logs `Validation.md` names into the task folder's `validation-evidence/<timestamp>/`, one folder per Validation run, and name each copy by its path relative to the task folder — a log in a temporary folder did not outlive the session
+- `scripts/lint-i18n.sh` re-vendored from spine-toolkit 2.29.1
