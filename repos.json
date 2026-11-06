@@ -1,5 +1,5 @@
 {
-  "marketplace": { "path": "../claude-marketplace" },
+  "marketplace": { "path": "../spine-marketplace" },
   "checkouts": {
     "spine-toolkit":   { "path": "../spine-toolkit",   "verify": "scripts/test-foundation.sh",
                          "floor_files": ["conventions/driver-contract.md", "docs/building-a-driver.md", "tests/fixtures/fixture-driver/.claude-plugin/plugin.json"] },

@@ -12,7 +12,7 @@ Maintenance for the `spine-toolkit` family: the plugins, and the marketplace tha
 | [**spine-platform-kotlin**](https://github.com/iruirc/spine-platform-kotlin) | [![](https://img.shields.io/github/v/tag/iruirc/spine-platform-kotlin?sort=semver&label=&color=0969da)](https://github.com/iruirc/spine-platform-kotlin/tags) | ![](https://img.shields.io/github/license/iruirc/spine-platform-kotlin?label=&color=555) | ![](https://img.shields.io/github/last-commit/iruirc/spine-platform-kotlin?label=&color=888) | Kotlin knowledge across Android, Compose Desktop, JVM servers and KMP |
 | [**spine-driver-mobile**](https://github.com/iruirc/spine-driver-mobile) | [![](https://img.shields.io/github/v/tag/iruirc/spine-driver-mobile?sort=semver&label=&color=0969da)](https://github.com/iruirc/spine-driver-mobile/tags) | ![](https://img.shields.io/github/license/iruirc/spine-driver-mobile?label=&color=555) | ![](https://img.shields.io/github/last-commit/iruirc/spine-driver-mobile?label=&color=888) | adapter declaring what the `mcp-devices` server drives, per surface |
 | [**spine-driver-agent-device**](https://github.com/iruirc/spine-driver-agent-device) | [![](https://img.shields.io/github/v/tag/iruirc/spine-driver-agent-device?sort=semver&label=&color=0969da)](https://github.com/iruirc/spine-driver-agent-device/tags) | ![](https://img.shields.io/github/license/iruirc/spine-driver-agent-device?label=&color=555) | ![](https://img.shields.io/github/last-commit/iruirc/spine-driver-agent-device?label=&color=888) | the same for `callstack/agent-device` |
-| [**claude-marketplace**](https://github.com/iruirc/claude-marketplace) | [![](https://img.shields.io/github/v/tag/iruirc/claude-marketplace?sort=semver&label=&color=0969da)](https://github.com/iruirc/claude-marketplace/tags) | ![](https://img.shields.io/github/license/iruirc/claude-marketplace?label=&color=555) | ![](https://img.shields.io/github/last-commit/iruirc/claude-marketplace?label=&color=888) | the Claude and Codex catalogues users add; the Claude catalogue is the canonical roster |
+| [**spine-marketplace**](https://github.com/iruirc/spine-marketplace) | [![](https://img.shields.io/github/v/tag/iruirc/spine-marketplace?sort=semver&label=&color=0969da)](https://github.com/iruirc/spine-marketplace/tags) | ![](https://img.shields.io/github/license/iruirc/spine-marketplace?label=&color=555) | ![](https://img.shields.io/github/last-commit/iruirc/spine-marketplace?label=&color=888) | the Claude and Codex catalogues users add; the Claude catalogue is the canonical roster |
 
 Those badges read the remote, so they say what is **published**. `scripts/status.sh` reads this disk
 and says what is **here** — the two disagree exactly while something is committed and not yet pushed,
@@ -23,7 +23,7 @@ it keeps instead is `notes/`, where the body of every release it has written sta
 that used it.
 
 It lives outside all three because it must name all three. `spine-toolkit` cannot host it — its own
-suite forbids core naming a sibling tree by filesystem path — and `claude-marketplace` is a public
+suite forbids core naming a sibling tree by filesystem path — and `spine-marketplace` is a public
 catalogue, not a workshop.
 
 ## Layout it assumes
@@ -32,7 +32,7 @@ All repositories are siblings:
 
 ```
 spine/
-  claude-marketplace/
+  spine-marketplace/
   spine-toolkit/
   spine-platform-swift/
   spine-ops/          <- here
@@ -86,7 +86,7 @@ Two files under `scripts/` are not commands:
 
 ```json
 {
-  "marketplace": { "path": "../claude-marketplace" },
+  "marketplace": { "path": "../spine-marketplace" },
   "checkouts": {
     "spine-toolkit": { "path": "../spine-toolkit", "verify": "scripts/test-foundation.sh",
                        "floor_files": ["docs/building-a-driver.md"] }
