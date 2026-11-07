@@ -1,0 +1,5 @@
+- `swift-architect`, `swift-developer`, `swift-refactorer` and `swift-tester` defer to `spine-toolkit:artifact-reader` for the style of the artifacts they write: where it asks for full sentences, "Keep prose concise" no longer wins
+- `conventions/i18n.md` re-adapted from spine-toolkit 2.30.0: the Russian example no longer puts an identifier in the subject of the sentence, and the header carries the new sha256
+- requires `spine-toolkit >=2.30.0 <3` (was `>=2.12.0`): the agents name a skill that does not exist before 2.30.0
+- `swift-validator` follows the QA manual-checks format of `spine-toolkit:manual-checks`: a case is a test case a tester runs, the visible text of the app is copied from `Localizable.strings` (and the `.xcstrings` catalog where the project keeps one), and the findings of the toolkit's `lint-manual-checks.sh` go back to the writer once
+- `swift-validator` now defers to `spine-toolkit:artifact-reader` for the style of `ManualChecks.md`, as the other swift agents already do
