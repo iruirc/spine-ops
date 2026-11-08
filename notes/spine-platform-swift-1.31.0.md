@@ -1,0 +1,8 @@
+- `swift-reviewer` writes the reviewed-commit lines (`[REVIEWED_COMMIT]`) in the closing block of `Review.md`, the last lines of the file after the body, while the status line stays line 1, and adds an `Impact` (one sentence: what breaks and for whom) to every finding; its Summary and Previous findings name each finding in words with its ID in brackets, never by the ID alone
+- `swift-architect` no longer imposes its own headings on `Research.md`: the headings come from the stage that calls it, starting with `## Short answer`, and the old content list (current state, proposed design, alternatives, integration points, risks, recommendation) moved into the text as content to cover
+- `swift-validator` writes the Summary of `Validation.md` in plain language and names no contract field
+- `swift-reviewer`, `swift-diagnostics` and `swift-security` now point at `spine-toolkit:artifact-reader` for the style of the artifacts they write (`swift-validator` and the other swift agents already did)
+- `swift-tester` opening line points at its `## Output Structure` section; it named a section that does not exist
+- requires `spine-toolkit >=2.31.0 <3` (was `>=2.30.0 <3`): the reviewer contract changed in 2.31.0
+- an older platform reviewer that still writes the reviewed-commit lines right under the status line keeps working, since every reader of spine-toolkit takes the marker at any position
+- the output structure of `swift-diagnostics` is unchanged and still differs from the headings of the research workflow (open point for the owner)
