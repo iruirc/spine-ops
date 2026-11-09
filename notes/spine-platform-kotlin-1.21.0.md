@@ -1,0 +1,3 @@
+- `kotlin-jvm-validator`, `kotlin-ui-validator` and `kotlin-server-validator` apply `spine-toolkit:manual-checks` → `## Does this check need a person?` before writing a case: a deferred check becomes a case in `ManualChecks.md` only when it needs a person (a device action, a visual judgment, an external service); otherwise it is covered with its evidence or a `## Not covered` gap, and its `OpsChecklist.md` item is N/A with the reason instead of Pending
+- under `[MANUAL_CHECKS] = auto`, no case that needs a person means no file; `Validation.md` carries `manual checks: none — <why>`
+- requires `spine-toolkit >=2.32.0 <3` (was `>=2.31.0 <3`): the criterion ships in 2.32.0
