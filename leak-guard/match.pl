@@ -164,7 +164,7 @@ sub hits_in {
   return @h;
 }
 
-# Under --redact the loc is printed in CI logs, and its file name can itself
+# Under --redact the loc is printed where a log can be shared, and its file name can itself
 # be a leak. Keep the non-path parts (commit/tag word, sha, line number) and
 # blank out a path or tag name that hits a rule.
 sub redact_loc {

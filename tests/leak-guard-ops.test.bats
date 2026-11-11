@@ -26,12 +26,6 @@ setup() {
   printf 'word Gizmo\n' > "$W/stoplist.txt"
   export LEAK_GUARD_STOPLIST="$W/stoplist.txt"
 
-  # gh must never reach the network from a test.
-  mkdir -p "$W/bin"
-  printf '#!/bin/sh\nexit 1\n' > "$W/bin/gh"
-  chmod +x "$W/bin/gh"
-  export PATH="$W/bin:$PATH"
-
   mkrepo "$W/core"
   mkdir -p "$W/core/.claude-plugin"
   printf '{\n  "name": "core",\n  "version": "1.0.0"\n}\n' > "$W/core/.claude-plugin/plugin.json"

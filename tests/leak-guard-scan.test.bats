@@ -408,7 +408,6 @@ copy_guard() {
   run scan --staged
   [ "$status" -eq 1 ]
   printf '%s\n' "${lines[${#lines[@]}-1]}" | grep -qF 'allow <value> spine-x:<path>'
-  printf '%s\n' "${lines[${#lines[@]}-1]}" | grep -qF sync-leak-secret.sh
 }
 
 @test "--validate passes a good stoplist; bad arguments exit 2" {

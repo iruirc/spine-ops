@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Which checkouts leak-guard guards, and whether their hooks are installed.
-# Sourced, never executed (install-hooks.sh, sync-leak-secret.sh, release.sh, push.sh, status.sh).
+# Sourced, never executed (install-hooks.sh, release.sh, push.sh, status.sh).
 #
 # The roster is the plugins of the marketplace manifest, the marketplace itself
 # and spine-ops itself: every repo whose commits reach the public. It comes from
@@ -54,15 +54,3 @@ leak_hooks_ok() { [ "$(leak_hooks_state "$1")" = ok ]; }
 # The stoplist is found the way scan.sh finds it (this mirrors one line of it);
 # whether it is usable is scan.sh's own verdict.
 leak_stoplist_path() { printf '%s\n' "${LEAK_GUARD_STOPLIST:-$LEAK_GUARD_DIR/../../spine-notes/leak-guard/stoplist.txt}"; }
-
-# owner/repo from an origin URL on github.com, ssh or https; empty otherwise.
-github_slug() {
-  local u="$1" rest
-  case "$u" in *github.com[:/]*) ;; *) return 0 ;; esac
-  u="${u%/}"; u="${u%.git}"
-  rest="${u%[/:]*}"
-  printf '%s/%s\n' "${rest##*[/:]}" "${u##*[/:]}"
-}
-
-# owner/repo of the checkout in <dir> from its origin, empty if it has none on GitHub.
-leak_repo_slug() { github_slug "$(git -C "$1" config --get remote.origin.url 2>/dev/null || true)"; }

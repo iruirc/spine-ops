@@ -63,13 +63,9 @@ JSON
   mkrepo "$W/ops"; commit_all "$W/ops"
 
   # release.sh and push.sh refuse without leak-guard: a one-record stoplist, the
-  # hooks in every fixture repo, and a gh that cannot reach the network.
+  # hooks in every fixture repo.
   printf 'word Gizmo\n' > "$W/stoplist.txt"
   export LEAK_GUARD_STOPLIST="$W/stoplist.txt"
-  mkdir -p "$W/bin"
-  printf '#!/bin/sh\nexit 1\n' > "$W/bin/gh"
-  chmod +x "$W/bin/gh"
-  export PATH="$W/bin:$PATH"
   "$W/ops/leak-guard/install-hooks.sh" >/dev/null
 }
 

@@ -287,6 +287,6 @@ set -e
 [ "${st[1]}" -ne 2 ] || exit 2
 [ "${st[0]}" -eq 0 ] || die "git failed ($MODE)"
 if [ "${st[1]}" -eq 1 ] && [ "$REDACT" -eq 0 ]; then
-  echo "hint: replace the data with a placeholder, or add 'allow <value> $REPO:<path>' to the stoplist and run sync-leak-secret.sh" >&2
+  echo "hint: replace the data with a placeholder, or add 'allow <value> $REPO:<path>' to the stoplist" >&2
 fi
 exit "${st[1]}"

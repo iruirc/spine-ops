@@ -11,8 +11,6 @@
 # Repos: every plugin of the marketplace, the marketplace, spine-ops itself.
 # Hooks per repo:  ok | missing | broken path | foreign
 # Stoplist:        ok (N records) | missing | invalid      (see scan.sh for where it lives)
-# Secrets, per repo, LEAK_STOPLIST in GitHub:  ok | missing | older than stoplist;
-#                  "skipped" when gh is absent or not signed in. Never affects the exit code.
 # Git's global config is never touched.
 set -euo pipefail
 
@@ -20,7 +18,7 @@ HERE="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
 # shellcheck source=roster.sh
 . "$HERE/roster.sh"
 
-usage() { sed -n '2,15p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'; }
+usage() { sed -n '2,13p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'; }
 
 MODE=install
 case "${1:-}" in
@@ -66,29 +64,8 @@ do_install() {
 
 # --- check -----------------------------------------------------------------
 
-# ISO-8601 with an offset or Z, to epoch seconds, without GNU or BSD date.
-iso_epoch() {
-  perl -MTime::Local=timegm -e '
-    my $s = shift;
-    $s =~ /^(\d{4})-(\d\d)-(\d\d)[T ](\d\d):(\d\d):(\d\d)(?:\.\d+)?(?:Z|([+-])(\d\d):?(\d\d))?$/ or exit 1;
-    my $t = timegm($6, $5, $4, $3, $2 - 1, $1);
-    $t -= ($7 eq "-" ? -1 : 1) * ($8 * 3600 + $9 * 60) if defined $7;
-    print "$t\n";' "$1"
-}
-
-# When the stoplist last changed, in epoch seconds: its last commit in the repo
-# it lives in (spine-notes), else the file's mtime.
-stoplist_epoch() {
-  local sl="$1" d iso e=""
-  d="$(dirname -- "$sl")"
-  iso="$(git -C "$d" log -1 --format=%cI -- "$(basename -- "$sl")" 2>/dev/null || true)"
-  [ -z "$iso" ] || e="$(iso_epoch "$iso" 2>/dev/null || true)"
-  [ -n "$e" ] || e="$(perl -e 'print((stat $ARGV[0])[9], "\n")' "$sl" 2>/dev/null || true)"
-  printf '%s\n' "$e"
-}
-
 do_check() {
-  local name dir state fail=0 sl sl_state sl_count sl_epoch="" slug upd e verdict
+  local name dir state fail=0 sl sl_state sl_count
 
   echo "hooks:"
   while IFS=$'\t' read -r name dir; do
@@ -103,42 +80,12 @@ do_check() {
   elif ( cd "$OPS_ROOT" && bash "$HERE/scan.sh" --validate ) >/dev/null 2>&1; then
     sl_count="$(awk '{ sub(/\r$/, "") } !/^[ \t]*(#|$)/ { n++ } END { print n + 0 }' "$sl")"
     sl_state="ok ($sl_count records)"
-    sl_epoch="$(stoplist_epoch "$sl")"
   else
     sl_state=invalid
   fi
   echo "stoplist: $sl_state"
   echo "  path: $sl"
   case "$sl_state" in ok*) ;; *) fail=1 ;; esac
-
-  if ! command -v gh >/dev/null 2>&1 || ! gh auth status >/dev/null 2>&1; then
-    echo "secrets: skipped (gh is absent or not signed in)"
-  else
-    echo "secrets (LEAK_STOPLIST):"
-    while IFS=$'\t' read -r name dir; do
-      slug="$(leak_repo_slug "$dir")"
-      if [ -z "$slug" ]; then
-        printf '  %-24s %s\n' "$name" "unknown (origin is not on GitHub)"
-        continue
-      fi
-      if ! upd="$(gh secret list -R "$slug" --json name,updatedAt 2>/dev/null </dev/null)"; then
-        printf '  %-24s %s\n' "$name" "unknown (gh could not list the secrets)"
-        continue
-      fi
-      upd="$(printf '%s' "$upd" | jq -r '[.[] | select(.name == "LEAK_STOPLIST") | .updatedAt] | first // empty' 2>/dev/null || true)"
-      if [ -z "$upd" ]; then
-        verdict=missing
-      else
-        e="$(iso_epoch "$upd" 2>/dev/null || true)"
-        if [ -n "$e" ] && [ -n "$sl_epoch" ] && [ "$e" -lt "$sl_epoch" ]; then
-          verdict="older than stoplist"
-        else
-          verdict=ok
-        fi
-      fi
-      printf '  %-24s %s\n' "$name" "$verdict"
-    done <<<"$ROSTER"
-  fi
 
   [ "$fail" -eq 0 ]
 }
