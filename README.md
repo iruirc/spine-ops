@@ -55,16 +55,45 @@ git clone git@github.com:iruirc/spine-ops.git
 scripts/check.sh          # says at once whether the layout is right
 ```
 
+## New machine
+
+`leak-guard/` keeps what must not be public out of these repositories: git hooks that scan every commit,
+message and tag before it is made or pushed, and the same scan inside `release.sh` and `push.sh`. It
+reads a private stoplist from `spine-notes/leak-guard/stoplist.txt`, so `spine-notes` has to be cloned
+too. Clone every repository from `repos.json`, the marketplace and `spine-notes` as siblings:
+
+```
+spine/
+  spine-marketplace/
+  spine-toolkit/
+  spine-platform-swift/
+  spine-ops/
+  spine-notes/        <- holds leak-guard/stoplist.txt
+```
+
+Then install the hooks and confirm them, from `spine-ops`:
+
+```
+leak-guard/install-hooks.sh
+leak-guard/install-hooks.sh --check
+```
+
+The first sets `core.hooksPath` in the local config of each public checkout — the plugins, the
+marketplace and `spine-ops` — and never touches the global one or a hooks path somebody else set.
+`--check` prints the state of each (`ok`, `missing`, `broken path`, `foreign`) and of the stoplist,
+and exits 1 unless all are `ok`. Until they are, `release.sh` and `push.sh` refuse to run, and
+`scripts/status.sh` shows the same table under `leak-guard:`.
+
 ## Commands
 
 Every command takes `-h`. The two read-only ones take nothing else.
 
 | | | |
 |---|---|---|
-| `scripts/status.sh` | — | one table: version, highest tag, branch, ahead/behind, tree, and unreleased commits |
+| `scripts/status.sh` | — | one table: version, highest tag, branch, ahead/behind, tree, and unreleased commits; then the leak-guard hooks and stoplist |
 | `scripts/check.sh` | — | the invariants nobody was checking. Exit 0 clean, 1 on a breach — the one to run in a hook or before a release |
-| `scripts/release.sh` | `<targets…> [--dry-run]` | bump, verify the bumped trees, commit, tag. Stops there. Exit 2 means the release notes are missing and names them |
-| `scripts/push.sh` | `[--dry-run]` | publish what release prepared: commits and every release tag origin lacks, nothing else |
+| `scripts/release.sh` | `<targets…> [--dry-run]` | bump, verify the bumped trees, commit, tag. Stops there. Exit 2 means the release notes are missing and names them. Refuses without the leak-guard hooks, and on notes that do not scan clean |
+| `scripts/push.sh` | `[--dry-run]` | publish what release prepared: commits and every release tag origin lacks, nothing else. Scans all of it first and sends nothing if any repo fails |
 | `scripts/test.sh` | — | the suite under `tests/`, `bats-core` required |
 
 `tests/` covers the part of this repository where a wrong answer is silent — the semver arithmetic

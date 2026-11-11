@@ -5,6 +5,7 @@
 #   push.sh --dry-run    say what would go
 #   push.sh              send it
 . "$(dirname -- "${BASH_SOURCE[0]}")/lib.sh"
+. "$OPS_ROOT/leak-guard/roster.sh"
 
 DRY=0
 case "${1:-}" in
@@ -42,6 +43,57 @@ send() {
   for t in $pending; do git -C "$dir" push --quiet origin "refs/tags/$t"; done
   note "$label: $ahead commit(s)${pending:+ and tag(s) $pending} pushed"
 }
+
+# Before the first push, over every repo that would be sent: the hooks are
+# installed, and what origin lacks — the commits of the branch and each pending
+# tag — scans clean. The scan runs here directly, not through the hooks, so a
+# commit made with them switched off is still stopped. Any failure stops
+# everything, a dry run included.
+preflight() {
+  local name dir br ahead out rc t tags roster before bad=0
+  echo "leak-guard:"
+  # Captured first: a roster that fails to build must stop the push, not read
+  # as a roster with nobody in it.
+  roster="$(leak_roster)"
+  [ -n "$roster" ] || die "leak-guard: the roster of repos is empty — nothing was sent"
+  while IFS=$'\t' read -r name dir; do
+    before="$bad"
+    if ! leak_hooks_ok "$dir"; then
+      echo "error: $name has no leak-guard hooks — run spine-ops/leak-guard/install-hooks.sh" >&2
+      bad=1; continue
+    fi
+    br="$(current_branch "$dir")"
+    git -C "$dir" fetch origin --quiet 2>/dev/null || true
+    rc=0
+    if git -C "$dir" rev-parse -q --verify "origin/$br" >/dev/null 2>&1; then
+      ahead="$(git -C "$dir" rev-list --count "origin/$br..$br")"
+      if [ "$ahead" -gt 0 ]; then
+        out="$( cd "$dir" && "$OPS_ROOT/leak-guard/scan.sh" --range "origin/$br..$br" 2>&1 )" || rc=$?
+      fi
+    else
+      out="$( cd "$dir" && "$OPS_ROOT/leak-guard/scan.sh" --commits-not-on origin "$br" 2>&1 )" || rc=$?
+    fi
+    if [ "$rc" -ne 0 ]; then
+      echo "error: $name: the commits to push do not pass leak-guard" >&2
+      printf '%s\n' "$out" | sed 's/^/    /' >&2
+      bad=1; continue
+    fi
+    tags="$(pending_tags "$dir" "$br")"
+    while IFS= read -r t; do
+      [ -n "$t" ] || continue
+      rc=0
+      out="$( cd "$dir" && "$OPS_ROOT/leak-guard/scan.sh" --tag "$t" --remote origin 2>&1 )" || rc=$?
+      if [ "$rc" -ne 0 ]; then
+        echo "error: $name: tag $t does not pass leak-guard" >&2
+        printf '%s\n' "$out" | sed 's/^/    /' >&2
+        bad=1
+      fi
+    done <<<"$tags"
+    [ "$bad" -ne "$before" ] || note "$name: hooks installed, pending commits and tags scanned clean"
+  done <<<"$roster"
+  [ "$bad" -eq 0 ] || die "leak-guard stopped the push — nothing was sent"
+}
+preflight
 
 echo "push:"
 # Publish plugin repositories first. The Codex marketplace resolves their

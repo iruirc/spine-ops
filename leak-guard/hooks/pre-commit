@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# Stop a commit whose staged changes carry a leak. Any non-zero from scan.sh
+# (found or error) fails the hook.
+set -u
+# Find this script's real directory, following symlinks, without readlink -f.
+src="${BASH_SOURCE[0]}"
+while [ -L "$src" ]; do
+  dir="$(cd -P -- "$(dirname -- "$src")" && pwd)"
+  src="$(readlink -- "$src")"
+  case "$src" in /*) ;; *) src="$dir/$src" ;; esac
+done
+HERE="$(cd -P -- "$(dirname -- "$src")" && pwd)"
+SCAN="$HERE/../scan.sh"
+[ -f "$SCAN" ] || { echo "leak-guard: scan.sh not found at $SCAN" >&2; exit 1; }
+
+bash "$SCAN" --staged || { echo "leak-guard: commit stopped" >&2; exit 1; }

@@ -30,3 +30,16 @@ note "marketplace: $(unreleased_count "$mp")"
 while IFS= read -r n; do
   note "$n: $(unreleased_count "$(checkout_path "$n")")"
 done < <(plugin_names)
+
+# What leak-guard says about the hooks and the stoplist. Read-only, and never
+# fails the table above: a red line here is information, not an error. `gh` is
+# asked about secrets over the network, so where `timeout` exists it is bounded.
+echo
+echo "leak-guard:"
+guard_cmd=("$OPS_ROOT/leak-guard/install-hooks.sh" --check)
+if command -v timeout >/dev/null 2>&1; then guard_cmd=(timeout 30 "${guard_cmd[@]}"); fi
+guard_rc=0
+guard_out="$("${guard_cmd[@]}" 2>&1 </dev/null)" || guard_rc=$?
+printf '%s\n' "$guard_out" | sed 's/^/  /'
+[ "$guard_rc" -ne 124 ] || echo "  (the check timed out)"
+exit 0

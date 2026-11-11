@@ -50,6 +50,7 @@ JSON
 
   mkdir -p "$W/ops/notes"
   cp -Rp "$BATS_TEST_DIRNAME/../scripts" "$W/ops/scripts"
+  cp -Rp "$BATS_TEST_DIRNAME/../leak-guard" "$W/ops/leak-guard"
   cat > "$W/ops/repos.json" <<'JSON'
 {
   "marketplace": { "path": "../market" },
@@ -60,6 +61,16 @@ JSON
 JSON
   echo "- the change" > "$W/ops/notes/core-1.1.0.md"
   mkrepo "$W/ops"; commit_all "$W/ops"
+
+  # release.sh and push.sh refuse without leak-guard: a one-record stoplist, the
+  # hooks in every fixture repo, and a gh that cannot reach the network.
+  printf 'word Gizmo\n' > "$W/stoplist.txt"
+  export LEAK_GUARD_STOPLIST="$W/stoplist.txt"
+  mkdir -p "$W/bin"
+  printf '#!/bin/sh\nexit 1\n' > "$W/bin/gh"
+  chmod +x "$W/bin/gh"
+  export PATH="$W/bin:$PATH"
+  "$W/ops/leak-guard/install-hooks.sh" >/dev/null
 }
 
 teardown() { rm -rf "$W"; }

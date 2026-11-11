@@ -13,6 +13,7 @@
 # Git-backed and carries no copied versions, so it is validated by check.sh but
 # never rewritten by a release.
 . "$(dirname -- "${BASH_SOURCE[0]}")/lib.sh"
+. "$OPS_ROOT/leak-guard/roster.sh"
 
 DRY=0
 DEFAULT_KIND=""
@@ -105,6 +106,37 @@ while IFS=$'\t' read -r name dir from to kind n; do
 done <<<"$PLAN"
 guard_release_ready marketplace "$mp"; note "marketplace: on main, clean, not behind"
 guard_release_ready "spine-ops (release notes)" "$OPS_ROOT"; note "spine-ops: on main, clean, not behind"
+
+# Every repo this release commits to reaches the public: the hooks must be there,
+# and the notes become a commit body, so they are scanned before they are used.
+hooks_guard() {  # name dir
+  leak_hooks_ok "$2" || die "$1 has no leak-guard hooks — run spine-ops/leak-guard/install-hooks.sh"
+}
+while IFS=$'\t' read -r name dir from to kind n; do
+  [ -n "$name" ] || continue
+  hooks_guard "$name" "$dir"
+done <<<"$PLAN"
+hooks_guard "$(basename -- "$mp")" "$mp"
+hooks_guard "$(basename -- "$OPS_ROOT")" "$OPS_ROOT"
+note "leak-guard hooks installed in every repo"
+
+notes_found=()
+while IFS=$'\t' read -r name dir from to kind n; do
+  [ -n "$name" ] || continue
+  [ ! -s "$OPS_ROOT/notes/$name-$to.md" ] || notes_found+=("notes/$name-$to.md")
+done <<<"$PLAN"
+# A note becomes a commit body, which the commit-msg hook checks as a message
+# (no path, so an allow never applies). Check it the same way here, one note at
+# a time so the output says which note.
+notes_bad=0
+for f in ${notes_found[@]+"${notes_found[@]}"}; do
+  if scan_out="$( cd "$OPS_ROOT" && "$OPS_ROOT/leak-guard/scan.sh" --message "$OPS_ROOT/$f" 2>&1 )"; then :; else
+    printf '%s\n' "$scan_out" | sed "s#^#    $f: #" >&2
+    notes_bad=1
+  fi
+done
+[ "$notes_bad" -eq 0 ] || die "the release notes do not pass leak-guard — nothing was touched"
+[ "${#notes_found[@]}" -eq 0 ] || note "release notes scanned clean"
 
 missing=""
 while IFS=$'\t' read -r name dir from to kind n; do

@@ -1,0 +1,9 @@
+# Public leak patterns: local paths that name a real person or volume.
+# One Perl regex per line. The rule id is the physical line number of the
+# rule, so comments count as lines. Each rule refuses a match that follows a
+# word character, dot, $, } or slash, so a path after a variable or inside a
+# longer path is not caught, and skips obvious placeholders (foo, <you>, $USER).
+(?:(?<=file://)|(?<=/System/Volumes/Data)|(?<![A-Za-z0-9_.$}/-]))/Users/(?!(?:foo|bar|u|me|you|user|username|example|alice|bob|name|Shared)(?![A-Za-z0-9_-]|\.[A-Za-z0-9_])|[<$])[\w.-]+
+(?:(?<=file://)|(?<=/System/Volumes/Data)|(?<![A-Za-z0-9_.$}/-]))/home/(?!(?:foo|bar|u|me|you|user|username|example|alice|bob|name)(?![A-Za-z0-9_-]|\.[A-Za-z0-9_])|[<$])[\w.-]+
+(?:(?<=file://)|(?<=/System/Volumes/Data)|(?<![A-Za-z0-9_.$}/-]))/Volumes/(?![<$])[\w.-]+
+(?<![A-Za-z0-9_.$}/-])(?i:C:\\Users\\)(?!(?:foo|bar|u|me|you|user|username|example|alice|bob|name|Public)\b|[<$%])[\w.-]+

@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+# Stop a push that would publish a leak. $1 is the remote name; stdin carries
+# one "<local ref> <local sha> <remote ref> <remote sha>" line per ref. Every
+# line is checked and all failures are reported before the hook exits 1. Any
+# non-zero from scan.sh (found or error) fails the hook.
+set -u
+# Find this script's real directory, following symlinks, without readlink -f.
+src="${BASH_SOURCE[0]}"
+while [ -L "$src" ]; do
+  dir="$(cd -P -- "$(dirname -- "$src")" && pwd)"
+  src="$(readlink -- "$src")"
+  case "$src" in /*) ;; *) src="$dir/$src" ;; esac
+done
+HERE="$(cd -P -- "$(dirname -- "$src")" && pwd)"
+SCAN="$HERE/../scan.sh"
+[ -f "$SCAN" ] || { echo "leak-guard: scan.sh not found at $SCAN" >&2; exit 1; }
+
+remote="$1"
+zero=0000000000000000000000000000000000000000
+failed=0
+while read -r lref lsha rref rsha; do
+  [ -n "${lsha:-}" ] || continue
+  # A deletion has nothing to publish.
+  case "$lsha" in *[!0]*) ;; *) continue ;; esac
+  # A tag is told by where it goes (a tag ref) or what it is (a tag object), not
+  # by the local name: a sha can be pushed to a tag ref, and a tag can go under
+  # another name.
+  istag=0
+  case "$rref" in refs/tags/*) istag=1 ;; esac
+  case "$lref" in refs/tags/*) istag=1 ;; esac
+  [ "$(git cat-file -t "$lsha" 2>/dev/null)" != tag ] || istag=1
+  if [ "$istag" -eq 1 ]; then
+    case "$lref" in refs/tags/*) tagname="${lref#refs/tags/}" ;; *) tagname="$lsha" ;; esac
+    bash "$SCAN" --tag "$tagname" --remote "$remote" || failed=1
+  elif [ "${rsha:-$zero}" != "$zero" ] && git cat-file -e "${rsha}^{commit}" 2>/dev/null; then
+    bash "$SCAN" --range "$rsha..$lsha" || failed=1
+  else
+    bash "$SCAN" --commits-not-on "$remote" "$lsha" || failed=1
+  fi
+done
+[ "$failed" -eq 0 ] || { echo "leak-guard: push stopped" >&2; exit 1; }
