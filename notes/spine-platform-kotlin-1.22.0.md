@@ -1,0 +1,4 @@
+- requires spine-toolkit 2.36.0 or newer (`>=2.36.0 <3`): the validators write `ManualChecks.md` to its new rules
+- `kotlin-ui-validator`, `kotlin-server-validator` and `kotlin-jvm-validator` write the file in the style the run's `manual_checks_style` names (`brief` by default), count no fields, and put code references only in `## Code references`
+- every deferred check goes through `## Does this check need a person?`, which asks first whether the diff changes the behaviour; one it does not change is a `## Not covered` line and its `OpsChecklist.md` item N/A, not a case. `kotlin-jvm-validator` no longer treats every drive step as needing a person. The BUG replay stays a case
+- measurements the validator can take go to `Validation.md`; the file a person walks carries none

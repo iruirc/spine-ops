@@ -1,0 +1,4 @@
+- requires spine-toolkit 2.36.0 or newer (`>=2.36.0 <3`): the validator writes `ManualChecks.md` to its new rules
+- `swift-validator` writes the file in the style the run's `manual_checks_style` names (`brief` by default), counts no fields, and puts code references only in `## Code references`
+- every deferred check — `[DRIVE_APP] = [off]`, a non-working driver, a capability the driver block does not name — goes through `## Does this check need a person?`, which asks first whether the diff changes the behaviour; one it does not change is a `## Not covered` line and its `OpsChecklist.md` item N/A, not a case. The BUG replay stays a case
+- measurements the validator can take go to `Validation.md`; the file a person walks carries none
