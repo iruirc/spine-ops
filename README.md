@@ -105,7 +105,7 @@ Every command takes `-h`. The two read-only ones take nothing else.
 
 | | | |
 |---|---|---|
-| `scripts/status.sh` | — | one table: version, highest tag, branch, ahead/behind, tree, and unreleased commits; then the leak-guard hooks and stoplist, and whether `spine/CLAUDE.md` imports `WORKSPACE.md` |
+| `scripts/status.sh` | — | one table: version, highest tag, branch, ahead/behind, tree, and unreleased commits; then the leak-guard hooks and stoplist, and whether `spine/CLAUDE.md` imports `WORKSPACE.md` and `spine/AGENTS.md` links it |
 | `scripts/check.sh` | — | the invariants nobody was checking. Exit 0 clean, 1 on a breach — the one to run in a hook or before a release |
 | `scripts/release.sh` | `<targets…> [--dry-run]` | bump, verify the bumped trees, commit, tag. Stops there. Exit 2 means the release notes are missing and names them. Refuses without the leak-guard hooks, and on notes that do not scan clean |
 | `scripts/push.sh` | `[--dry-run]` | publish what release prepared: commits and every release tag origin lacks, nothing else. Scans all of it first and sends nothing if any repo fails |
