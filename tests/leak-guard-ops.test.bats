@@ -249,6 +249,29 @@ head_of() { git -C "$W/$1.git" rev-parse main; }
   printf '%s\n' "$output" | grep -qE '^  +CLAUDE.md +ok' || { echo "$output"; return 1; }
 }
 
+@test "status says whether spine/AGENTS.md links WORKSPACE.md, and still exits 0" {
+  printf 'rules\n' > "$W/ops/WORKSPACE.md"
+  run "$W/ops/scripts/status.sh"
+  [ "$status" -eq 0 ]
+  printf '%s\n' "$output" | grep -qE '^  +AGENTS.md +missing' || { echo "$output"; return 1; }
+  [[ "$output" == *"ln -s ops/WORKSPACE.md AGENTS.md"* ]] || { echo "$output"; return 1; }
+
+  cp "$W/ops/WORKSPACE.md" "$W/AGENTS.md"
+  run "$W/ops/scripts/status.sh"
+  [ "$status" -eq 0 ]
+  printf '%s\n' "$output" | grep -qE '^  +AGENTS.md +not a link' || { echo "$output"; return 1; }
+
+  ln -sf nowhere.md "$W/AGENTS.md"
+  run "$W/ops/scripts/status.sh"
+  [ "$status" -eq 0 ]
+  printf '%s\n' "$output" | grep -qE '^  +AGENTS.md +not a link' || { echo "$output"; return 1; }
+
+  ln -sf ops/WORKSPACE.md "$W/AGENTS.md"
+  run "$W/ops/scripts/status.sh"
+  [ "$status" -eq 0 ]
+  printf '%s\n' "$output" | grep -qE '^  +AGENTS.md +ok' || { echo "$output"; return 1; }
+}
+
 @test "release without a stoplist fails closed, nothing is tagged" {
   install_hooks
   core_head="$(git -C "$W/core" rev-parse HEAD)"

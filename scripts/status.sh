@@ -39,7 +39,8 @@ guard_out="$("$OPS_ROOT/leak-guard/install-hooks.sh" --check 2>&1 </dev/null)" |
 printf '%s\n' "$guard_out" | sed 's/^/  /'
 
 # The folder above the checkouts is not a repository, so the file that loads WORKSPACE.md into
-# every Claude Code session started there is lost with each new clone. Information, like the above.
+# every Claude Code session started there is lost with each new clone, and so is the symlink through
+# which Codex gets WORKSPACE.md. Information, like the above.
 echo
 echo "workspace:"
 import="@$(basename -- "$OPS_ROOT")/WORKSPACE.md"
@@ -50,4 +51,11 @@ else state="no import"
 fi
 printf '  %-26s %s\n' CLAUDE.md "$state"
 [ "$state" = ok ] || note "  fix, from the folder above the checkouts: printf '$import\\n' >> CLAUDE.md"
+agents_md="$(dirname -- "$OPS_ROOT")/AGENTS.md"
+if [ -L "$agents_md" ] && [ "$agents_md" -ef "$OPS_ROOT/WORKSPACE.md" ]; then state=ok
+elif [ ! -e "$agents_md" ] && [ ! -L "$agents_md" ]; then state=missing
+else state="not a link"
+fi
+printf '  %-26s %s\n' AGENTS.md "$state"
+[ "$state" = ok ] || note "  fix, from the folder above the checkouts: ln -s $(basename -- "$OPS_ROOT")/WORKSPACE.md AGENTS.md"
 exit 0
