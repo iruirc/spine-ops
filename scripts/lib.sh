@@ -118,6 +118,29 @@ codex_marketplace_errors() {
   return "$fail"
 }
 
+# A checkout keeps its instructions for agents in AGENTS.md, and its CLAUDE.md is
+# nothing but the import of it. Two files with rules drift apart; one file and an
+# import cannot. A symlink does not count as the import: not every tool follows it.
+agents_md_errors() {
+  local d="$1" fail=0
+  if [ ! -f "$d/AGENTS.md" ]; then
+    echo "no AGENTS.md"
+    fail=1
+  elif [ ! -s "$d/AGENTS.md" ]; then
+    echo "AGENTS.md is empty"
+    fail=1
+  fi
+  if [ -L "$d/CLAUDE.md" ] || [ ! -f "$d/CLAUDE.md" ] || [ "$(cat "$d/CLAUDE.md")" != "@AGENTS.md" ]; then
+    echo "CLAUDE.md is not the one line @AGENTS.md"
+    fail=1
+  fi
+  if [ -e "$d/.claude/CLAUDE.md" ] || [ -L "$d/.claude/CLAUDE.md" ]; then
+    echo ".claude/CLAUDE.md is still there"
+    fail=1
+  fi
+  return "$fail"
+}
+
 # Version a plugin is listed at IN THE MARKETPLACE, which is a different fact
 # from the version its own plugin.json carries. check.sh exists because the two
 # can disagree.

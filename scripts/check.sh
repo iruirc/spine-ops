@@ -96,4 +96,15 @@ while IFS= read -r n; do
   fi
 done < <(plugin_names)
 
+# 7. A repository's instructions for agents live in its AGENTS.md; CLAUDE.md only imports it.
+#    Two files with rules drift apart, which is how this rule came to be.
+while IFS= read -r n; do
+  d="$(checkout_path "$n")"
+  if agents_errors="$(agents_md_errors "$d")"; then
+    good "$n keeps its instructions in AGENTS.md"
+  else
+    while IFS= read -r error; do [ -z "$error" ] || bad "$n: $error"; done <<<"$agents_errors"
+  fi
+done < <(jq -r '.checkouts | keys[]' "$CONFIG")
+
 exit "$fail"
