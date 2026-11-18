@@ -46,8 +46,8 @@ each pointing at its Git repository. It carries no copied versions. `check.sh` h
 equal to the checkouts so it cannot become a second independent roster.
 
 The rules for running tests while working on these repositories are `WORKSPACE.md`. A Claude Code
-session started in `spine/` loads them through `spine/CLAUDE.md`, a file outside git — see
-[New machine](#new-machine).
+session started in `spine/` loads them through `spine/CLAUDE.md`, a Codex session through
+`spine/AGENTS.md`; both are outside git — see [New machine](#new-machine).
 
 ## First run on a machine
 
@@ -88,14 +88,16 @@ marketplace and `spine-ops` — and never touches the global one or a hooks path
 and exits 1 unless all are `ok`. Until they are, `release.sh` and `push.sh` refuse to run, and
 `scripts/status.sh` shows the same table under `leak-guard:`.
 
-Last, give Claude Code the working rules. `spine/` is not a repository, so the file that imports
-`WORKSPACE.md` into every session started there does not come with any clone. From `spine/`:
+Last, give Claude Code and Codex the working rules. `spine/` is not a repository, so the files that
+bring `WORKSPACE.md` into every session started there do not come with any clone. From `spine/`:
 
 ```
 printf '@spine-ops/WORKSPACE.md\n' >> CLAUDE.md
+ln -s spine-ops/WORKSPACE.md AGENTS.md
 ```
 
-`scripts/status.sh` says under `workspace:` whether it is there (`ok`, `missing`, `no import`).
+`scripts/status.sh` says under `workspace:` whether they are there, one row each, `CLAUDE.md`
+(`ok`, `missing`, `no import`) and `AGENTS.md` (`ok`, `missing`, `not a link`).
 
 ## Commands
 

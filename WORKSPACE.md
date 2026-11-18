@@ -1,8 +1,11 @@
 # Working on the spine repositories
 
 These rules apply to every agent that works in a spine repository, a subagent included, except where
-a section says otherwise. A repository keeps its own rules in its `.claude/CLAUDE.md`; what is shared
-lives here.
+a section says otherwise. A repository keeps its own rules in its `AGENTS.md` (`CLAUDE.md` only
+imports it); what is shared lives here.
+
+If a repository's `AGENTS.md` is not already in your instructions, read it before you change
+anything in that repository.
 
 ## Tests
 
@@ -42,7 +45,8 @@ default `--stall`; a command that prints nothing for minutes needs a larger `--s
 `stalled` twice in a row, means stop and report rather than keep waiting. A subagent that ends its
 turn ends its work, so it cannot wait for a notification.
 
-In the main session, start the command with `run_in_background` and wait for the notification.
+In the main session, start the command with `run_in_background` and wait for the notification. In
+Codex, which has no `run_in_background`, the main session waits the way a subagent does.
 
 Never wait with a `sleep` or a `pgrep` in a loop.
 
@@ -56,5 +60,14 @@ slice of its output.
 
 ## How this file is loaded
 
-`spine/CLAUDE.md`, outside git, holds one line, `@spine-ops/WORKSPACE.md`. A session started from
-`spine/` reads it at start, and its subagents get the same one.
+`spine/` is not a repository, and two files outside git load this one into every session started
+there:
+
+- Claude Code: `spine/CLAUDE.md` holds one line, `@spine-ops/WORKSPACE.md`. Its subagents get the
+  same set. It loads a repository's `CLAUDE.md`, and through it `AGENTS.md`, when it touches a file
+  in that repository.
+- Codex: `spine/AGENTS.md` is a symlink to `spine-ops/WORKSPACE.md`; start `codex` from `spine/`.
+  Codex reads `AGENTS.md` only from its starting folder up to the project root, never below, so a
+  repository's `AGENTS.md` reaches it through the rule at the top of this file.
+
+`spine-ops/scripts/status.sh` says under `workspace:` whether both are there.
