@@ -38,14 +38,15 @@ scripts/long-run.sh wait <log> --for 110
 
 `start` prints the log path. Repeat `wait` until its status is `done`: `done exit=0` passed, any
 other exit failed. `running` means call it again. `stalled` means the log has been silent for the
-default `--stall`; a command that prints nothing for minutes needs a larger `--stall`. A subagent that
-ends its turn ends its work, so it cannot wait for a notification.
+default `--stall`; a command that prints nothing for minutes needs a larger `--stall`. `timeout`, or
+`stalled` twice in a row, means stop and report rather than keep waiting. A subagent that ends its
+turn ends its work, so it cannot wait for a notification.
 
 In the main session, start the command with `run_in_background` and wait for the notification.
 
 Never wait with a `sleep` or a `pgrep` in a loop.
 
-A suite started in the background inherits SIGINT as ignored. The pty helper now resets it, so a
+A suite started in the background inherits SIGINT as ignored. The toolkit's pty test helper resets it, so a
 backgrounded run is safe.
 
 ## Reading a run
