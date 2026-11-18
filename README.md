@@ -38,6 +38,9 @@ spine/
   spine-ops/          <- here
 ```
 
+The rules for running tests while working on these repositories are `WORKSPACE.md`. Its place is
+`spine/CLAUDE.md`, a file outside git with the one line `@spine-ops/WORKSPACE.md`; create it once.
+
 `repos.json` declares that, and nothing else: **which checkout is where, and how each one verifies
 itself**. Which plugins exist is not written here — it is read from the marketplace's own
 `.claude-plugin/marketplace.json`. The Codex catalogue at `.agents/plugins/marketplace.json` is a
