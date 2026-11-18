@@ -1,0 +1,9 @@
+- **Behavior change:** the starting state of a `ManualChecks.md` scene is grounded in code like a case is. Each scene — `P2` and on in `full`, every `S<n>` in `brief` and in a collective pass file — gets its own row in `## Code references`, keyed `S<n>` or `P<n>`; `P0`, `P1` and a scene that is all `**dev-only:**` need none. The lint's `codeslot` check names a scene with no row, a scene row with no `file:line`, and a row for a scene not in `## Preparation`
+- a scene the driver opened in the run records what the screen showed, not what it was expected to show; a screen and code that disagree are a finding in `Validation.md`
+- a value the run's data sets (what recognition found, a file's length, a system setting, the clock) is written relative to a landmark on the screen; an absolute value only where code fixes it
+- a file rewritten whole — a change of style, or by hand under newer rules — has every factual claim of every scene and every case checked again; a refresh re-checks a scene by its row and gives a scene with no row one
+- a collective pass carries one `| S<n> |` row per merged scene, with no step prefix, grounded for the state the scene takes
+- an existing `ManualChecks.md` gains scene findings only when a Validation refreshes it, and that refresh adds the rows
+- the hung-call watch no longer exits a second after it starts on a workflow subagent's transcript: it reads only conversation turns and skips rows with no timestamp. A watch that exits for any other reason is now reported as `stage_watch_failed` with its last line, and the stage goes on
+- `stage-leftovers` diff also names processes a stage's shell orphaned to PID 1: of this user, started after the snapshot, in a group whose leader is gone
+- no platform change is forced by a vendored file: none of the six moved since 2.37.1
