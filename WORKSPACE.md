@@ -1,9 +1,14 @@
 # Working on the spine repositories
 
-These rules apply to every agent that works in a spine repository, a subagent included. A repository
-keeps its own rules in its `.claude/CLAUDE.md`; what is shared lives here.
+These rules apply to every agent that works in a spine repository, a subagent included, except where
+a section says otherwise. A repository keeps its own rules in its `.claude/CLAUDE.md`; what is shared
+lives here.
 
 ## Tests
+
+This section is for `spine-toolkit`, `spine-platform-swift` and `spine-platform-kotlin`, the
+repositories with a foundation suite. Elsewhere, run the repository's `verify` entry in
+`spine-ops/repos.json`, where it has one; `spine-ops` itself uses `scripts/test.sh`.
 
 Before a commit, run `scripts/test-foundation.sh changed`. It runs the tests that name what the
 branch touched, and `changed --list` prints the choice without running it. In `spine-platform-swift`
