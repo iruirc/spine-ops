@@ -21,6 +21,10 @@ has no `--list`.
 Run the full suite, `scripts/test-foundation.sh all`, once, at the end of a plan: in each repository
 the plan touched, before the final review of the branch. Do not run it per task.
 
+A green `all` records the tree it ran on in `.git/spine-verified-trees`; releasing that tree then
+runs only the tests that name the files the release rewrites, so a release right after a plan does
+not run the full suite again.
+
 If the full suite finds something, fix it and check the fix with `changed`. Then run the full suite
 again, once, after the last fix. A round of fixes after a task review is a `changed` run as well.
 

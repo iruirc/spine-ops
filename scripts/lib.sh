@@ -36,6 +36,20 @@ checkout_path() {
 
 verify_cmd() { jq -r --arg n "$1" '.checkouts[$n].verify // empty' "$CONFIG"; }
 
+# Runs from the checkout's root with the paths of the files a release rewrote,
+# and only the tests that name them. Empty: the release always runs `verify`.
+verify_touched_cmd() { jq -r --arg n "$1" '.checkouts[$n].verify_touched // empty' "$CONFIG"; }
+
+# Exit 0 when a green full run left the checkout's current tree in its stamp:
+# one tree hash per line, compared as a whole line.
+tree_verified() {
+  local tree stamp
+  tree="$(git -C "$1" rev-parse 'HEAD^{tree}')" || return 1
+  stamp="$(git -C "$1" rev-parse --path-format=absolute --git-common-dir)/spine-verified-trees" || return 1
+  [ -f "$stamp" ] || return 1
+  grep -qxF "$tree" "$stamp"
+}
+
 # Files that quote the plugin's own version as a dependency floor and move with it.
 floor_files() { jq -r --arg n "$1" '.checkouts[$n].floor_files // [] | .[]' "$CONFIG"; }
 

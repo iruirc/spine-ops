@@ -107,7 +107,7 @@ Every command takes `-h`. The two read-only ones take nothing else.
 |---|---|---|
 | `scripts/status.sh` | — | one table: version, highest tag, branch, ahead/behind, tree, and unreleased commits; then the leak-guard hooks and stoplist, and whether `spine/CLAUDE.md` imports `WORKSPACE.md` and `spine/AGENTS.md` links it |
 | `scripts/check.sh` | — | the invariants nobody was checking. Exit 0 clean, 1 on a breach — the one to run in a hook or before a release |
-| `scripts/release.sh` | `<targets…> [--dry-run]` | bump, verify the bumped trees, commit, tag. Stops there. Exit 2 means the release notes are missing and names them. Refuses without the leak-guard hooks, and on notes that do not scan clean |
+| `scripts/release.sh` | `<targets…> [--dry-run]` | bump, verify the bumped trees: only the tests of the files it rewrote when a green full run left a stamp of the tree, otherwise the full `verify`; commit, tag. Stops there. Exit 2 means the release notes are missing and names them. Refuses without the leak-guard hooks, and on notes that do not scan clean |
 | `scripts/push.sh` | `[--dry-run]` | publish what release prepared: commits and every release tag origin lacks, nothing else. Scans all of it first and sends nothing if any repo fails |
 | `scripts/test.sh` | — | the suite under `tests/`, `bats-core` required |
 
@@ -141,6 +141,12 @@ Two files under `scripts/` are not commands:
 `path` is relative to this repository. `verify` runs from the checkout's own root and must exit 0
 for that plugin to be released; leave it out and the release says the plugin was not verified rather
 than pretending it was. Which plugins exist is not written here — see above.
+
+`verify_touched` runs from the checkout's root too, with the paths of the files the release
+rewrote there — its host manifests and `floor_files`, relative to the checkout. It replaces `verify`
+only when a green full run left the tree being released in the checkout's
+`.git/spine-verified-trees`: that tree already passed everything, and the release changes nothing
+but those files. Leave it out and the release always runs `verify`.
 
 `floor_files` lists files, relative to the checkout, that quote the plugin's **own** version as a
 dependency floor — `{ "name": "spine-toolkit", "version": ">=1.7.3 <2" }` in a reference copy for
@@ -179,7 +185,9 @@ sits behind its remote. Then it works in three steps:
    the working trees. Nothing is committed yet. The version moves in `.claude-plugin/plugin.json`
    and, for a plugin that ships to Codex too, in `.codex-plugin/plugin.json`.
 2. **Verify** — each plugin's own `verify` runs on its staged tree, so what passes is the tree that
-   gets tagged. A failure prints the tail of its output and keeps the full log.
+   gets tagged. A plugin whose tree a green full run stamped runs its `verify_touched` on the
+   rewritten files instead; the `verified:` block, printed before staging and in a dry run, says
+   which plugin takes which path. A failure prints the tail of its output and keeps the full log.
 3. **Commit and tag** — only once every plugin has passed.
 
 Any failure in the first two steps reverts every staged edit in every repository and commits

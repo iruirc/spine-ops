@@ -155,6 +155,34 @@ else
   note "release notes present for every plugin"
 fi
 
+# --- verified: which suite each plugin's verify step runs ------------------
+# A green full run stamps the tree it ran on. The guards left every checkout
+# clean on main, so HEAD's tree is the tree before the release: when it was
+# stamped, only the tests that name the files the release rewrites are left.
+# Decided here, before staging changes the tree.
+
+PATHS=""      # lines: name<TAB>touched|full
+echo
+echo "verified:"
+while IFS=$'\t' read -r name dir from to kind n; do
+  [ -n "$name" ] || continue
+  tree="$(git -C "$dir" rev-parse 'HEAD^{tree}')"; tree="${tree:0:7}"
+  path=full
+  if tree_verified "$dir"; then
+    if [ -n "$(verify_touched_cmd "$name")" ]; then
+      path=touched
+      note "$name: tree $tree passed a full run — the release runs the tests that name its files"
+    else
+      note "$name: tree $tree passed a full run, but no verify_touched is declared — the release runs the full suite"
+    fi
+  else
+    note "$name: no full run of tree $tree — the release runs the full suite"
+  fi
+  PATHS="$PATHS$name	$path
+"
+done <<<"$PLAN"
+path_for() { printf '%s' "$PATHS" | awk -F'\t' -v n="$1" '$1 == n {print $2; exit}'; }
+
 [ "$DRY" -eq 0 ] || { echo; echo "--dry-run: stopping before verification and any change."; exit 0; }
 
 # --- stage: every edit, in the working trees only --------------------------
@@ -199,8 +227,23 @@ echo
 echo "verify:"
 while IFS=$'\t' read -r name dir from to kind n; do
   [ -n "$name" ] || continue
+  if [ "$(path_for "$name")" = touched ]; then
+    files=()
+    while IFS= read -r f; do files+=("$f"); done < <(host_manifests "$dir")
+    while IFS= read -r f; do [ -z "$f" ] || files+=("$f"); done < <(floor_files "$name")
+    cmd="$(verify_touched_cmd "$name")"
+    log="$(mktemp)"
+    if ( cd "$dir" && eval "$cmd" '"${files[@]}"' ) >"$log" 2>&1; then
+      rm -f "$log"
+      note "$name: touched files verified at $to"
+      continue
+    fi
+    tail -n 40 "$log" | sed 's/^/    /'
+    abort "$name failed its own verification at $to (full log: $log)"
+  fi
   cmd="$(verify_cmd "$name")"
   [ -n "$cmd" ] || { note "$name: no verify declared — skipped"; continue; }
+  note "$name: full suite ($cmd) — this takes minutes"
   log="$(mktemp)"
   if ( cd "$dir" && eval "$cmd" ) >"$log" 2>&1; then
     rm -f "$log"

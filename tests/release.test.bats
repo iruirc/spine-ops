@@ -15,7 +15,7 @@ commit_all() { git -C "$1" add -A; git -C "$1" commit --quiet -m change; }
 
 setup() {
   W="$(mktemp -d)"
-  export VERIFIED_AT="$W/verified-at"
+  export VERIFIED_AT="$W/verified-at" RAN_FULL="$W/ran-full" TOUCHED_ARGS="$W/touched-args"
 
   mkrepo "$W/core"
   mkdir -p "$W/core/.claude-plugin" "$W/core/docs"
@@ -27,9 +27,12 @@ setup() {
 #!/usr/bin/env bash
 v="$(jq -r .version .claude-plugin/plugin.json)"
 echo "$v" > "$VERIFIED_AT"
+echo full > "$RAN_FULL"
 grep -q "\"name\": \"core\", \"version\": \">=$v <" docs/driver.md || { echo "floor is not $v"; exit 1; }
 SH
-  chmod +x "$W/core/verify.sh"
+  # The run a stamped tree gets instead: records the files it was handed.
+  printf '#!/usr/bin/env bash\necho "$*" > "$TOUCHED_ARGS"\nexit "${TOUCHED_RC:-0}"\n' > "$W/core/touched.sh"
+  chmod +x "$W/core/verify.sh" "$W/core/touched.sh"
   commit_all "$W/core"; git -C "$W/core" tag 1.0.0
 
   mkrepo "$W/market"
@@ -55,7 +58,8 @@ JSON
 {
   "marketplace": { "path": "../market" },
   "checkouts": {
-    "core": { "path": "../core", "verify": "./verify.sh", "floor_files": ["docs/driver.md"] }
+    "core": { "path": "../core", "verify": "./verify.sh", "verify_touched": "./touched.sh",
+              "floor_files": ["docs/driver.md"] }
   }
 }
 JSON
@@ -70,6 +74,31 @@ JSON
 }
 
 teardown() { rm -rf "$W"; }
+
+# What a green full run leaves behind: the tree it ran on, in the stamp file.
+stamp() { git -C "$1" rev-parse 'HEAD^{tree}' >>"$1/.git/spine-verified-trees"; }
+
+# A second plugin, built like core but recording into its own files.
+add_edge() {
+  mkrepo "$W/edge"
+  mkdir -p "$W/edge/.claude-plugin"
+  printf '{\n  "name": "edge",\n  "version": "1.0.0"\n}\n' > "$W/edge/.claude-plugin/plugin.json"
+  printf '#!/usr/bin/env bash\necho full > "%s"\n' "$W/edge-ran-full" > "$W/edge/verify.sh"
+  printf '#!/usr/bin/env bash\necho "$*" > "%s"\n' "$W/edge-touched-args" > "$W/edge/touched.sh"
+  chmod +x "$W/edge/verify.sh" "$W/edge/touched.sh"
+  commit_all "$W/edge"; git -C "$W/edge" tag 1.0.0
+
+  jq '.plugins += [{"name": "edge", "version": "1.0.0"}]' "$W/market/.claude-plugin/marketplace.json" > "$W/mp.json"
+  mv "$W/mp.json" "$W/market/.claude-plugin/marketplace.json"
+  commit_all "$W/market"
+
+  jq '.checkouts.edge = {"path": "../edge", "verify": "./verify.sh", "verify_touched": "./touched.sh"}' \
+    "$W/ops/repos.json" > "$W/repos.json"
+  mv "$W/repos.json" "$W/ops/repos.json"
+  echo "- the edge change" > "$W/ops/notes/edge-1.1.0.md"
+  commit_all "$W/ops"
+  "$W/ops/leak-guard/install-hooks.sh" >/dev/null
+}
 
 give_origins() {
   local r
@@ -149,4 +178,93 @@ give_origins() {
   git -C "$W/market.git" rev-parse -q --verify refs/tags/1.2.0
   run git -C "$W/core.git" rev-parse -q --verify refs/tags/9.9.9
   [ "$status" -ne 0 ]
+}
+
+@test "a stamped tree runs only the tests of the files the release rewrites" {
+  stamp "$W/core"
+  run "$W/ops/scripts/release.sh" core=minor
+  [ "$status" -eq 0 ] || { echo "$output"; return 1; }
+  [ "$(cat "$TOUCHED_ARGS")" = ".claude-plugin/plugin.json docs/driver.md" ]
+  [ ! -e "$RAN_FULL" ]
+  [[ "$output" == *"core: tree "*" passed a full run — the release runs the tests that name its files"* ]] || { echo "$output"; return 1; }
+  [[ "$output" == *"core: touched files verified at 1.1.0"* ]] || { echo "$output"; return 1; }
+  git -C "$W/core" rev-parse -q --verify refs/tags/1.1.0
+}
+
+@test "an unstamped tree runs the full suite and says it takes minutes" {
+  run "$W/ops/scripts/release.sh" core=minor
+  [ "$status" -eq 0 ] || { echo "$output"; return 1; }
+  [ -e "$RAN_FULL" ]
+  [ ! -e "$TOUCHED_ARGS" ]
+  [[ "$output" == *"core: no full run of tree "*" — the release runs the full suite"* ]] || { echo "$output"; return 1; }
+  [[ "$output" == *"core: full suite (./verify.sh) — this takes minutes"* ]] || { echo "$output"; return 1; }
+}
+
+@test "a stamp of another tree runs the full suite" {
+  echo 0000000000000000000000000000000000000000 >>"$W/core/.git/spine-verified-trees"
+  run "$W/ops/scripts/release.sh" core=minor
+  [ "$status" -eq 0 ] || { echo "$output"; return 1; }
+  [ -e "$RAN_FULL" ]
+  [ ! -e "$TOUCHED_ARGS" ]
+  [[ "$output" == *"core: no full run of tree "* ]] || { echo "$output"; return 1; }
+}
+
+@test "a line that only starts with the tree is not a match" {
+  printf '%sx\n' "$(git -C "$W/core" rev-parse 'HEAD^{tree}')" >>"$W/core/.git/spine-verified-trees"
+  run "$W/ops/scripts/release.sh" core=minor
+  [ "$status" -eq 0 ] || { echo "$output"; return 1; }
+  [ -e "$RAN_FULL" ]
+  [ ! -e "$TOUCHED_ARGS" ]
+  [[ "$output" == *"core: no full run of tree "* ]] || { echo "$output"; return 1; }
+}
+
+@test "a stamped tree without verify_touched runs the full suite" {
+  jq 'del(.checkouts.core.verify_touched)' "$W/ops/repos.json" > "$W/repos.json"
+  mv "$W/repos.json" "$W/ops/repos.json"
+  commit_all "$W/ops"
+  stamp "$W/core"
+  run "$W/ops/scripts/release.sh" core=minor
+  [ "$status" -eq 0 ] || { echo "$output"; return 1; }
+  [ -e "$RAN_FULL" ]
+  [ ! -e "$TOUCHED_ARGS" ]
+  [[ "$output" == *"core: tree "*" passed a full run, but no verify_touched is declared — the release runs the full suite"* ]] || { echo "$output"; return 1; }
+}
+
+@test "a failing touched run reverts every edit and tags nothing" {
+  stamp "$W/core"
+  core_head="$(git -C "$W/core" rev-parse HEAD)"
+  market_head="$(git -C "$W/market" rev-parse HEAD)"
+  TOUCHED_RC=1 run "$W/ops/scripts/release.sh" core=minor
+  [ "$status" -ne 0 ]
+  [ -e "$TOUCHED_ARGS" ]
+  [ ! -e "$RAN_FULL" ]
+  [ "$(git -C "$W/core" rev-parse HEAD)" = "$core_head" ]
+  [ "$(git -C "$W/market" rev-parse HEAD)" = "$market_head" ]
+  [ -z "$(git -C "$W/core" status --porcelain)" ]
+  [ -z "$(git -C "$W/market" status --porcelain)" ]
+  run git -C "$W/core" rev-parse -q --verify refs/tags/1.1.0
+  [ "$status" -ne 0 ]
+}
+
+@test "a dry run shows the path and runs neither" {
+  stamp "$W/core"
+  run "$W/ops/scripts/release.sh" core=minor --dry-run
+  [ "$status" -eq 0 ] || { echo "$output"; return 1; }
+  [[ "$output" == *"verified:"* ]] || { echo "$output"; return 1; }
+  [[ "$output" == *"core: tree "*" passed a full run"* ]] || { echo "$output"; return 1; }
+  [ ! -e "$TOUCHED_ARGS" ]
+  [ ! -e "$RAN_FULL" ]
+}
+
+@test "two plugins in one release each take their own path" {
+  add_edge
+  stamp "$W/core"
+  run "$W/ops/scripts/release.sh" core=minor edge=minor
+  [ "$status" -eq 0 ] || { echo "$output"; return 1; }
+  [ -e "$TOUCHED_ARGS" ]
+  [ ! -e "$RAN_FULL" ]
+  [ -e "$W/edge-ran-full" ]
+  [ ! -e "$W/edge-touched-args" ]
+  [[ "$output" == *"edge: no full run of tree "* ]] || { echo "$output"; return 1; }
+  git -C "$W/edge" rev-parse -q --verify refs/tags/1.1.0
 }
