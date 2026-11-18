@@ -11,8 +11,9 @@ repositories with a foundation suite. Elsewhere, run the repository's `verify` e
 `spine-ops/repos.json`, where it has one; `spine-ops` itself uses `scripts/test.sh`.
 
 Before a commit, run `scripts/test-foundation.sh changed`. It runs the tests that name what the
-branch touched, and `changed --list` prints the choice without running it. In `spine-platform-swift`
-it follows the map in `tests/foundation/README.md`.
+branch touched. In `spine-toolkit` and `spine-platform-kotlin`, `changed --list` prints the choice
+without running it. In `spine-platform-swift` it follows the map in `tests/foundation/README.md` and
+has no `--list`.
 
 Run the full suite, `scripts/test-foundation.sh all`, once, at the end of a plan: in each repository
 the plan touched, before the final review of the branch. Do not run it per task.
