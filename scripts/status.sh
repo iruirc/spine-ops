@@ -37,4 +37,17 @@ echo
 echo "leak-guard:"
 guard_out="$("$OPS_ROOT/leak-guard/install-hooks.sh" --check 2>&1 </dev/null)" || true
 printf '%s\n' "$guard_out" | sed 's/^/  /'
+
+# The folder above the checkouts is not a repository, so the file that loads WORKSPACE.md into
+# every Claude Code session started there is lost with each new clone. Information, like the above.
+echo
+echo "workspace:"
+import="@$(basename -- "$OPS_ROOT")/WORKSPACE.md"
+claude_md="$(dirname -- "$OPS_ROOT")/CLAUDE.md"
+if [ ! -f "$claude_md" ]; then state=missing
+elif grep -qxF -- "$import" "$claude_md"; then state=ok
+else state="no import"
+fi
+printf '  %-26s %s\n' CLAUDE.md "$state"
+[ "$state" = ok ] || note "  fix, from the folder above the checkouts: printf '$import\\n' >> CLAUDE.md"
 exit 0

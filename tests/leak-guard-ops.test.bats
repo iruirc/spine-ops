@@ -232,6 +232,23 @@ head_of() { git -C "$W/$1.git" rev-parse main; }
   printf '%s\n' "$output" | grep -qE '^  +core +ok'
 }
 
+@test "status says whether spine/CLAUDE.md imports WORKSPACE.md, and still exits 0" {
+  run "$W/ops/scripts/status.sh"
+  [ "$status" -eq 0 ]
+  printf '%s\n' "$output" | grep -qE '^  +CLAUDE.md +missing' || { echo "$output"; return 1; }
+  [[ "$output" == *"printf '@ops/WORKSPACE.md"* ]] || { echo "$output"; return 1; }
+
+  printf 'something else\n' > "$W/CLAUDE.md"
+  run "$W/ops/scripts/status.sh"
+  [ "$status" -eq 0 ]
+  printf '%s\n' "$output" | grep -qE '^  +CLAUDE.md +no import' || { echo "$output"; return 1; }
+
+  printf '@ops/WORKSPACE.md\n' > "$W/CLAUDE.md"
+  run "$W/ops/scripts/status.sh"
+  [ "$status" -eq 0 ]
+  printf '%s\n' "$output" | grep -qE '^  +CLAUDE.md +ok' || { echo "$output"; return 1; }
+}
+
 @test "release without a stoplist fails closed, nothing is tagged" {
   install_hooks
   core_head="$(git -C "$W/core" rev-parse HEAD)"

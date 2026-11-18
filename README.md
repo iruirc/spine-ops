@@ -45,8 +45,9 @@ checked projection of that roster: exactly the plugins that ship a `.codex-plugi
 each pointing at its Git repository. It carries no copied versions. `check.sh` holds that projection
 equal to the checkouts so it cannot become a second independent roster.
 
-The rules for running tests while working on these repositories are `WORKSPACE.md`. Its place is
-`spine/CLAUDE.md`, a file outside git with the one line `@spine-ops/WORKSPACE.md`; create it once.
+The rules for running tests while working on these repositories are `WORKSPACE.md`. A Claude Code
+session started in `spine/` loads them through `spine/CLAUDE.md`, a file outside git — see
+[New machine](#new-machine).
 
 ## First run on a machine
 
@@ -87,13 +88,22 @@ marketplace and `spine-ops` — and never touches the global one or a hooks path
 and exits 1 unless all are `ok`. Until they are, `release.sh` and `push.sh` refuse to run, and
 `scripts/status.sh` shows the same table under `leak-guard:`.
 
+Last, give Claude Code the working rules. `spine/` is not a repository, so the file that imports
+`WORKSPACE.md` into every session started there does not come with any clone. From `spine/`:
+
+```
+printf '@spine-ops/WORKSPACE.md\n' >> CLAUDE.md
+```
+
+`scripts/status.sh` says under `workspace:` whether it is there (`ok`, `missing`, `no import`).
+
 ## Commands
 
 Every command takes `-h`. The two read-only ones take nothing else.
 
 | | | |
 |---|---|---|
-| `scripts/status.sh` | — | one table: version, highest tag, branch, ahead/behind, tree, and unreleased commits; then the leak-guard hooks and stoplist |
+| `scripts/status.sh` | — | one table: version, highest tag, branch, ahead/behind, tree, and unreleased commits; then the leak-guard hooks and stoplist, and whether `spine/CLAUDE.md` imports `WORKSPACE.md` |
 | `scripts/check.sh` | — | the invariants nobody was checking. Exit 0 clean, 1 on a breach — the one to run in a hook or before a release |
 | `scripts/release.sh` | `<targets…> [--dry-run]` | bump, verify the bumped trees, commit, tag. Stops there. Exit 2 means the release notes are missing and names them. Refuses without the leak-guard hooks, and on notes that do not scan clean |
 | `scripts/push.sh` | `[--dry-run]` | publish what release prepared: commits and every release tag origin lacks, nothing else. Scans all of it first and sends nothing if any repo fails |
