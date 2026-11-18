@@ -1,0 +1,3 @@
+- no change for projects using the plugin: everything in this release is for work on the plugin itself
+- the vendored test runner is re-pinned to spine-toolkit 2.37.1's `scripts/test-foundation.sh`; this copy and its `changed` map are unchanged
+- `tests/foundation/README.md` and `AGENTS.md`: working through a plan, run `all` once, at its end; between, run `changed`

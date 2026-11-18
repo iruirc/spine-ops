@@ -1,0 +1,3 @@
+- no change for projects using the plugin: everything in this release is for work on the plugin itself
+- `scripts/test-foundation.sh changed` runs only the tests that name a file the branch touched, the tests marked `# changed: sweep` when anything under `skills/`, `agents/`, `conventions/` or `commands/` moves, the whole suite when a test helper or fixture moves, and `unit` when the `spine-toolkit` checkout beside it has changes; `changed --list` prints the choice without running it. Adapted from spine-toolkit 2.37.1, whose runner this copy is pinned to
+- `AGENTS.md`: run `changed` after a change; the full suite runs once, before the branch merges
