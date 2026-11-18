@@ -146,7 +146,9 @@ than pretending it was. Which plugins exist is not written here — see above.
 rewrote there — its host manifests and `floor_files`, relative to the checkout. It replaces `verify`
 only when a green full run left the tree being released in the checkout's
 `.git/spine-verified-trees`: that tree already passed everything, and the release changes nothing
-but those files. Leave it out and the release always runs `verify`.
+but those files. Leave it out and the release always runs `verify`. The stamp stands in for `verify`
+only because `verify` is `scripts/test-foundation.sh`, the full `all`; a `verify` that adds other steps
+must not declare `verify_touched`.
 
 `floor_files` lists files, relative to the checkout, that quote the plugin's **own** version as a
 dependency floor — `{ "name": "spine-toolkit", "version": ">=1.7.3 <2" }` in a reference copy for

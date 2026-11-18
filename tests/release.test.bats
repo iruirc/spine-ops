@@ -31,7 +31,7 @@ echo full > "$RAN_FULL"
 grep -q "\"name\": \"core\", \"version\": \">=$v <" docs/driver.md || { echo "floor is not $v"; exit 1; }
 SH
   # The run a stamped tree gets instead: records the files it was handed.
-  printf '#!/usr/bin/env bash\necho "$*" > "$TOUCHED_ARGS"\nexit "${TOUCHED_RC:-0}"\n' > "$W/core/touched.sh"
+  printf '#!/usr/bin/env bash\necho "$*" > "$TOUCHED_ARGS"\n[ -z "${TOUCHED_NONE:-}" ] || echo "touched: no test names these files" >&2\nexit "${TOUCHED_RC:-0}"\n' > "$W/core/touched.sh"
   chmod +x "$W/core/verify.sh" "$W/core/touched.sh"
   commit_all "$W/core"; git -C "$W/core" tag 1.0.0
 
@@ -189,6 +189,19 @@ give_origins() {
   [[ "$output" == *"core: tree "*" passed a full run — the release runs the tests that name its files"* ]] || { echo "$output"; return 1; }
   [[ "$output" == *"core: touched files verified at 1.1.0"* ]] || { echo "$output"; return 1; }
   git -C "$W/core" rev-parse -q --verify refs/tags/1.1.0
+}
+
+@test "a stamped tree whose files no test names says so instead of claiming they were verified" {
+  stamp "$W/core"
+  TOUCHED_NONE=1 run "$W/ops/scripts/release.sh" core=minor
+  [ "$status" -eq 0 ] || { echo "$output"; return 1; }
+  [ -e "$TOUCHED_ARGS" ]
+  [ ! -e "$RAN_FULL" ]
+  [[ "$output" == *"core: no test names the files the release rewrites; the tree passed a full run before the bump"* ]] || { echo "$output"; return 1; }
+  [[ "$output" != *"touched files verified"* ]]
+  git -C "$W/core" rev-parse -q --verify refs/tags/1.1.0
+  [ "$(jq -r .version "$W/core/.claude-plugin/plugin.json")" = "1.1.0" ]
+  [ -z "$(git -C "$W/core" status --porcelain)" ]
 }
 
 @test "an unstamped tree runs the full suite and says it takes minutes" {

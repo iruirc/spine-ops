@@ -234,8 +234,12 @@ while IFS=$'\t' read -r name dir from to kind n; do
     cmd="$(verify_touched_cmd "$name")"
     log="$(mktemp)"
     if ( cd "$dir" && eval "$cmd" '"${files[@]}"' ) >"$log" 2>&1; then
+      if grep -qxF 'touched: no test names these files' "$log"; then
+        note "$name: no test names the files the release rewrites; the tree passed a full run before the bump"
+      else
+        note "$name: touched files verified at $to"
+      fi
       rm -f "$log"
-      note "$name: touched files verified at $to"
       continue
     fi
     tail -n 40 "$log" | sed 's/^/    /'
