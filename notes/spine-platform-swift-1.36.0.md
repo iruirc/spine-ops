@@ -1,0 +1,4 @@
+- requires spine-toolkit 2.39.0
+- `swift-validator` builds and runs the task's regression set: changed packages from the task's commits in each repository, their dependents by the reverse closure over `.package(path:)` in every `Package.swift` under the brief's search roots, and the app when one of them is among its local package references. Each package runs through its own scheme, the app through `test_sim`; a re-run re-runs only what the new commits reach and carries the rest. A project's own whole-workspace script runs only when the owner asks
+- `Validation.md` gets the `## Regression set` table, and the validator runs `lint-validation-scope.sh` before it returns
+- `swift-reviewer` reads Validation's record before re-running anything and checks the set against the diff and the manifests

@@ -1,0 +1,5 @@
+- requires spine-toolkit 2.39.0
+- the three validators build and run the task's regression set: modules from `settings.gradle(.kts)` and `includeBuild` under the brief's search roots, dependents by the reverse closure over project dependencies in any form (`project(":x")`, `project(':x')`, `projects.x`, `testFixtures(...)`), the app when one of them is in its graph. Gradle runs only the set's modules (an included build's module through that build's name, a sibling checkout from its own root); Maven runs with `-pl <modules> -amd`; Amper per module where it can, otherwise whole, said under `## Scope`. A single-module project runs everything, as before
+- a re-run re-runs only what the new commits reach and carries the rest; on BUG a replay the commits do not reach is carried with the status it had
+- `Validation.md` gets the `## Regression set` table, and the validators run `lint-validation-scope.sh` before they return
+- `kotlin-reviewer` reads Validation's record before re-running anything and checks the set against the diff and the build files
