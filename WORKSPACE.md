@@ -13,24 +13,33 @@ This section is for `spine-toolkit`, `spine-platform-swift` and `spine-platform-
 repositories with a foundation suite. Elsewhere, run the repository's `verify` entry in
 `spine-ops/repos.json`, where it has one; `spine-ops` itself uses `scripts/test.sh`.
 
-Before a commit, run `scripts/test-foundation.sh changed`. It runs the tests that name what the
-branch touched. In `spine-toolkit` and `spine-platform-kotlin`, `changed --list` prints the choice
-without running it. In `spine-platform-swift` it follows the map in `tests/foundation/README.md` and
-has no `--list`.
+Inside a plan, before every commit, run `scripts/test-foundation.sh touched` with no files. That is
+a task's commit and a round of fixes after a task review or after the final review of the branch. It
+runs the tests that name what the commit holds: the files that differ from HEAD and the untracked
+ones, with no sweeps and no branch base. A changed test file runs itself, a changed helper runs the
+tests that load it, and a changed fixture runs all of `lib/`. In a platform it also always runs the
+tests that read the `spine-toolkit` checkout beside.
+
+Outside a plan, before a commit, run `scripts/test-foundation.sh changed`. It runs the tests that
+name what the branch touched. In `spine-toolkit` and `spine-platform-kotlin`, `changed --list` prints
+the choice without running it. In `spine-platform-swift` it follows the map in
+`tests/foundation/README.md` and has no `--list`.
 
 Run the full suite, `scripts/test-foundation.sh all`, once, at the end of a plan: in each repository
-the plan touched, before the final review of the branch. Do not run it per task.
+the plan touched, before the final review of the branch. Do not run it per task. Commit what a
+release needs, the toolkit floor in a platform and the like, before that `all`, or the release runs
+the full suite again.
 
 A green `all` records the tree it ran on in `.git/spine-verified-trees`; releasing that tree then
 runs only the tests that name the files the release rewrites, so a release right after a plan does
 not run the full suite again.
 
-If the full suite finds something, fix it and check the fix with `changed`. Then run the full suite
-again, once, after the last fix. A round of fixes after a task review is a `changed` run as well.
+If the full suite finds something, fix it, run the failed files with `bats`, then run `touched`.
+Then run the full suite again, once, after the last fix.
 
-Fixes after the final review of the branch are a `changed` run too, even where the skill that runs
-the plan, or the prompt it gives a fixer, says to run the whole suite. The full suite runs again
-only after a fix to something the full suite itself found.
+A fix after any review is a `touched` run, even where the skill that runs the plan, or the prompt it
+gives a fixer, says to run the whole suite. The full suite runs again only after a fix to something
+the full suite itself found.
 
 While iterating on one file, `bats <file>` is enough.
 
