@@ -1,0 +1,4 @@
+- development of the plugin itself: `scripts/test-foundation.sh touched` with no files runs the tests that name what the next commit holds, as in spine-toolkit 2.40.0, and still adds the tests that read the spine-toolkit checkout beside
+- a sweep's mark names the directories it walks and `changed` runs it only for a change in one of them, checked by `tests/foundation/helpers/sweep-lint.bash`; `skills.test.bats` is split. A one-paragraph skill edit selects 16 files instead of 23
+- `config-format` prints the matching line and how to name the section instead
+- the adapted `scripts/test-foundation.sh` follows spine-toolkit 2.40.0

@@ -1,0 +1,3 @@
+- development of the plugin itself: `scripts/test-foundation.sh touched` with no files runs the `lib/` tests that name what the next commit holds, as in spine-toolkit 2.40.0, and still adds the tests that read the spine-toolkit checkout beside; `tests/foundation/README.md` says when to use it and when `changed`
+- `config-format` prints the matching line and how to name the section instead
+- the adapted `scripts/test-foundation.sh` follows spine-toolkit 2.40.0
