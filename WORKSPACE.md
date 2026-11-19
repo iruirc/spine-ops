@@ -17,7 +17,8 @@ Inside a plan, before every commit, run `scripts/test-foundation.sh touched` wit
 a task's commit and a round of fixes after a task review or after the final review of the branch. It
 runs the tests that name what the commit holds: the files that differ from HEAD and the untracked
 ones, with no sweeps and no branch base. A changed test file runs itself, a changed helper runs the
-tests that load it, and a changed fixture runs all of `lib/`. In a platform it also always runs the
+tests that load it, a changed file under `skills/` runs the tests that name its skill, and a changed
+fixture runs all of `lib/`. In a platform it also always runs the
 tests that read the `spine-toolkit` checkout beside.
 
 Outside a plan, before a commit, run `scripts/test-foundation.sh changed`. It runs the tests that
