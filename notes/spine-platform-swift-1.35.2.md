@@ -1,0 +1,5 @@
+- no change for projects using the plugin: everything in this release is for work on the plugin itself
+- the vendored test runner is re-pinned to spine-toolkit 2.38.1's `scripts/test-foundation.sh`: a green `all` records the tree it ran on in `spine-verified-trees` under the git common dir, and `touched <file>...` runs the tests that name the files
+- `touched` here always adds the tests that read the spine-toolkit checkout beside this one (those naming `SPINE_TOOLKIT_CORE`): the recorded tree covers this repository only, and the toolkit may have moved since the full run
+- `AGENTS.md`: one instruction file for Claude Code and Codex; `quick_validate` runs through `python3`
+- `README.md`: reinstall through `codex plugin remove` and `add`; Codex bundles no plugin validator
