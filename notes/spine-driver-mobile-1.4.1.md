@@ -1,0 +1,3 @@
+- `AGENTS.md` for agents working on this repository: what it holds, how to check a change (`lint-driver-manifest.sh`, `spine-ops/WORKSPACE.md`), and the leak-guard rule; `CLAUDE.md` imports it
+- the leak-guard check stays local: a CI workflow for it was added and removed again
+- no change to the driver itself
