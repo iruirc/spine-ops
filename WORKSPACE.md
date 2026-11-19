@@ -28,6 +28,10 @@ not run the full suite again.
 If the full suite finds something, fix it and check the fix with `changed`. Then run the full suite
 again, once, after the last fix. A round of fixes after a task review is a `changed` run as well.
 
+Fixes after the final review of the branch are a `changed` run too, even where the skill that runs
+the plan, or the prompt it gives a fixer, says to run the whole suite. The full suite runs again
+only after a fix to something the full suite itself found.
+
 While iterating on one file, `bats <file>` is enough.
 
 ## Waiting for a long run
