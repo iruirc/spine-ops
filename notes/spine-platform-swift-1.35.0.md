@@ -1,0 +1,2 @@
+- `swift-validator` marks cases for an epic's collective manual-checks pass when `manual_checks_pass` is `end`: a check deferred only because a driver could not reach it stays a case marked `**Runner:** agent`, and `**Device:**` / `**Order:**` follow spine-toolkit's `## Marks for a collective pass`; under `per-step` nothing changes. A step it cannot perform is "deferred", no longer "deferred to a human"
+- requires spine-toolkit `>=2.37.0 <3`

@@ -1,0 +1,1 @@
+- packaging only, no behaviour change: 2.36.1 moved the Claude Code manifest alone, so the Codex manifest still read 2.36.0 and the three reference copies of the core dependency floor (`conventions/driver-contract.md`, `docs/building-a-driver.md`, the fixture driver) still named `>=2.36.0`. All of them now read 2.36.2

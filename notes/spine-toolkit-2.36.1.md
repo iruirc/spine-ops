@@ -1,0 +1,6 @@
+- a scene in `## Preparation` is a state and the shortest way to reach it, built without the behaviour the diff changes: when the state can be reached only through that behaviour, those actions are preparing steps of the case, so a broken change is the case's FAIL, never a scene that would not build. A scene that starts where another ends says "S1, then…" instead of repeating it. In `brief` a scene carries no `→` and no condition for BLOCKED
+- `## Not covered` is written for the person who walks the cases: what is left unchecked in the words of the screen, and why in one clause; how automated tests held it goes to `Validation.md`. The fresh reader reads the section like any other
+- a condition (language, theme, device…) earns a step walked again only when that step's result depends on it; a case about a condition walks to the screen it judges and stops there. `redundant` names a step walked again under a condition that cannot change its result, and a scene that repeats another
+- `## Brief` asks for `## Code references` only when the file holds a case, as `full` does
+- the lint reads `[STYLE] = Brief` and other cases as `brief`
+- the brief examples carry the one nothing-broke case, and the full examples' cart scene no longer reads the badge the example task changes
