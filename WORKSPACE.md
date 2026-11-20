@@ -13,8 +13,8 @@ This section is for `spine-toolkit`, `spine-platform-swift` and `spine-platform-
 repositories with a foundation suite. Elsewhere, run the repository's `verify` entry in
 `spine-ops/repos.json`, where it has one; `spine-ops` itself uses `scripts/test.sh`.
 
-Inside a plan, before every commit, run `scripts/test-foundation.sh touched` with no files. That is
-a task's commit and a round of fixes after a task review or after the final review of the branch. It
+Inside a plan, before every commit up to the full suite, run `scripts/test-foundation.sh touched`
+with no files. That is a task's commit and a round of fixes after a task review. It
 runs the tests that name what the commit holds: the files that differ from HEAD and the untracked
 ones, with no sweeps and no branch base. A changed test file runs itself, a changed helper runs the
 tests that load it, a changed file under `skills/` runs the tests that name its skill, and a changed
@@ -35,12 +35,20 @@ A green `all` records the tree it ran on in `.git/spine-verified-trees`; releasi
 runs only the tests that name the files the release rewrites, so a release right after a plan does
 not run the full suite again.
 
-If the full suite finds something, fix it, run the failed files with `bats`, then run `touched`.
-Then run the full suite again, once, after the last fix.
+After a green `all`, check every fix on the branch with `scripts/test-foundation.sh verified`
+instead of `touched`: a fix after the final review and a fix to what the full suite found alike. It
+runs what `changed` would run for everything that differs from the newest verified tree in the
+history of `HEAD`, and when green records the tree with `via` and that tree, so the release takes it
+as verified too. Run it with exactly what the commit will hold in the worktree, and commit all of
+it: the record is the worktree's tree, and a commit of part of it is a different tree, which the
+release runs the full suite on.
 
-A fix after any review is a `touched` run, even where the skill that runs the plan, or the prompt it
-gives a fixer, says to run the whole suite. The full suite runs again only after a fix to something
-the full suite itself found.
+If the full suite finds something, fix it, run the failed files with `bats`, then run `verified`.
+The full suite does not run again: `verified` ran everything the fix could reach, and the rest was
+green on the tree `all` recorded.
+
+A fix after any review is a `touched` run before the full suite and a `verified` run after it, even
+where the skill that runs the plan, or the prompt it gives a fixer, says to run the whole suite.
 
 While iterating on one file, `bats <file>` is enough.
 
