@@ -36,19 +36,19 @@ runs only the tests that name the files the release rewrites, so a release right
 not run the full suite again.
 
 After a green `all`, check every fix on the branch with `scripts/test-foundation.sh verified`
-instead of `touched`: a fix after the final review and a fix to what the full suite found alike. It
-runs what `changed` would run for everything that differs from the newest verified tree in the
-history of `HEAD`, and when green records the tree with `via` and that tree, so the release takes it
-as verified too. Run it with exactly what the commit will hold in the worktree, and commit all of
+instead of `touched`. It runs what `changed` would run for everything that differs from the newest
+verified tree in the history of `HEAD`, and when green records the tree with `via` and that tree, so
+the release takes it as verified too. Run it with exactly what the commit will hold in the worktree, and commit all of
 it: the record is the worktree's tree, and a commit of part of it is a different tree, which the
 release runs the full suite on.
 
-If the full suite finds something, fix it, run the failed files with `bats`, then run `verified`.
-The full suite does not run again: `verified` ran everything the fix could reach, and the rest was
-green on the tree `all` recorded.
+If the full suite finds something, fix it, run the failed files with `bats`, then run `touched`.
+Then run the full suite again, once, after the last fix: a red `all` records nothing, so `verified`
+has no tree from this plan to start from.
 
-A fix after any review is a `touched` run before the full suite and a `verified` run after it, even
-where the skill that runs the plan, or the prompt it gives a fixer, says to run the whole suite.
+A fix after any review is a `touched` run before a green full suite and a `verified` run after it,
+even where the skill that runs the plan, or the prompt it gives a fixer, says to run the whole suite.
+The full suite runs again only after a fix to something the full suite itself found.
 
 While iterating on one file, `bats <file>` is enough.
 
