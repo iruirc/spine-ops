@@ -198,7 +198,7 @@ give_origins() {
   [ -e "$TOUCHED_ARGS" ]
   [ ! -e "$RAN_FULL" ]
   [[ "$output" == *"core: no test names the files the release rewrites; the tree passed a full run before the bump"* ]] || { echo "$output"; return 1; }
-  [[ "$output" != *"touched files verified"* ]]
+  [[ "$output" != *"touched files verified"* ]] || false
   git -C "$W/core" rev-parse -q --verify refs/tags/1.1.0
   [ "$(jq -r .version "$W/core/.claude-plugin/plugin.json")" = "1.1.0" ]
   [ -z "$(git -C "$W/core" status --porcelain)" ]
@@ -209,7 +209,7 @@ give_origins() {
   [ "$status" -eq 0 ] || { echo "$output"; return 1; }
   [ -e "$RAN_FULL" ]
   [ ! -e "$TOUCHED_ARGS" ]
-  [[ "$output" == *"core: no full run of tree "*" — the release runs the full suite"* ]] || { echo "$output"; return 1; }
+  [[ "$output" == *"core: no full or verified run of tree "*" — the release runs the full suite"* ]] || { echo "$output"; return 1; }
   [[ "$output" == *"core: full suite (./verify.sh) — this takes minutes"* ]] || { echo "$output"; return 1; }
 }
 
@@ -219,7 +219,7 @@ give_origins() {
   [ "$status" -eq 0 ] || { echo "$output"; return 1; }
   [ -e "$RAN_FULL" ]
   [ ! -e "$TOUCHED_ARGS" ]
-  [[ "$output" == *"core: no full run of tree "* ]] || { echo "$output"; return 1; }
+  [[ "$output" == *"core: no full or verified run of tree "* ]] || { echo "$output"; return 1; }
 }
 
 @test "a tree verified through another runs only the tests of the files the release rewrites" {
@@ -238,7 +238,7 @@ give_origins() {
   run "$W/ops/scripts/release.sh" core=minor
   [ "$status" -eq 0 ] || { echo "$output"; return 1; }
   [ -e "$RAN_FULL" ]
-  [[ "$output" == *"core: no full run of tree "* ]] || { echo "$output"; return 1; }
+  [[ "$output" == *"core: no full or verified run of tree "* ]] || { echo "$output"; return 1; }
 }
 
 @test "a line that only starts with the tree is not a match" {
@@ -247,7 +247,7 @@ give_origins() {
   [ "$status" -eq 0 ] || { echo "$output"; return 1; }
   [ -e "$RAN_FULL" ]
   [ ! -e "$TOUCHED_ARGS" ]
-  [[ "$output" == *"core: no full run of tree "* ]] || { echo "$output"; return 1; }
+  [[ "$output" == *"core: no full or verified run of tree "* ]] || { echo "$output"; return 1; }
 }
 
 @test "a stamped tree without verify_touched runs the full suite" {
@@ -297,6 +297,6 @@ give_origins() {
   [ ! -e "$RAN_FULL" ]
   [ -e "$W/edge-ran-full" ]
   [ ! -e "$W/edge-touched-args" ]
-  [[ "$output" == *"edge: no full run of tree "* ]] || { echo "$output"; return 1; }
+  [[ "$output" == *"edge: no full or verified run of tree "* ]] || { echo "$output"; return 1; }
   git -C "$W/edge" rev-parse -q --verify refs/tags/1.1.0
 }

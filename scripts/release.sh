@@ -180,7 +180,7 @@ while IFS=$'\t' read -r name dir from to kind n; do
       note "$name: tree $tree passed $how, but no verify_touched is declared — the release runs the full suite"
     fi
   else
-    note "$name: no full run of tree $tree — the release runs the full suite"
+    note "$name: no full or verified run of tree $tree — the release runs the full suite"
   fi
   PATHS="$PATHS$name	$path
 "

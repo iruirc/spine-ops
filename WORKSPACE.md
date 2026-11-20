@@ -37,10 +37,11 @@ not run the full suite again.
 
 After a green `all`, check every fix on the branch with `scripts/test-foundation.sh verified`
 instead of `touched`. It runs what `changed` would run for everything that differs from the newest
-verified tree in the history of `HEAD`, and when green records the tree with `via` and that tree, so
-the release takes it as verified too. Run it with exactly what the commit will hold in the worktree, and commit all of
-it: the record is the worktree's tree, and a commit of part of it is a different tree, which the
-release runs the full suite on.
+verified tree in the history of `HEAD`; in a platform it leaves out the rule for the `spine-toolkit`
+checkout beside and always runs the tests that read it instead. When green it records the tree with
+`via` and that tree, so the release takes it as verified too. Run it with exactly what the commit
+will hold in the worktree, and commit all of it: the record is the worktree's tree, and a commit of
+part of it is a different tree, which the release runs the full suite on.
 
 If the full suite finds something, fix it, run the failed files with `bats`, then run `touched`.
 Then run the full suite again, once, after the last fix: a red `all` records nothing, so `verified`
