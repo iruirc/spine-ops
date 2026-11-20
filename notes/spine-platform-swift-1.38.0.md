@@ -1,0 +1,3 @@
+- development of the plugin itself: `scripts/test-foundation.sh verified`, as in spine-toolkit 2.42.0, runs the `changed` selection, the map in `tests/foundation/README.md`, from the newest verified tree in the history of `HEAD` and records the tree `via` it; instead of the rule for the spine-toolkit checkout beside it always adds the tests that read that checkout. The README names it and says when to run `all`
+- a test asserts with `[[ ]] || false`, held by `bats-assertions.test.bats`
+- the adapted `scripts/test-foundation.sh` follows spine-toolkit 2.42.0
