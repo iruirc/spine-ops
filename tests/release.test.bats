@@ -222,6 +222,25 @@ give_origins() {
   [[ "$output" == *"core: no full run of tree "* ]] || { echo "$output"; return 1; }
 }
 
+@test "a tree verified through another runs only the tests of the files the release rewrites" {
+  printf '%s via %s\n' "$(git -C "$W/core" rev-parse 'HEAD^{tree}')" 1111111111111111111111111111111111111111 \
+    >>"$W/core/.git/spine-verified-trees"
+  run "$W/ops/scripts/release.sh" core=minor
+  [ "$status" -eq 0 ] || { echo "$output"; return 1; }
+  [ ! -e "$RAN_FULL" ]
+  [ -e "$TOUCHED_ARGS" ]
+  [[ "$output" == *"core: tree "*" passed verified via 1111111 — the release runs the tests that name its files"* ]] || { echo "$output"; return 1; }
+}
+
+@test "a via line whose base is the tree is not a match" {
+  printf '1111111111111111111111111111111111111111 via %s\n' "$(git -C "$W/core" rev-parse 'HEAD^{tree}')" \
+    >>"$W/core/.git/spine-verified-trees"
+  run "$W/ops/scripts/release.sh" core=minor
+  [ "$status" -eq 0 ] || { echo "$output"; return 1; }
+  [ -e "$RAN_FULL" ]
+  [[ "$output" == *"core: no full run of tree "* ]] || { echo "$output"; return 1; }
+}
+
 @test "a line that only starts with the tree is not a match" {
   printf '%sx\n' "$(git -C "$W/core" rev-parse 'HEAD^{tree}')" >>"$W/core/.git/spine-verified-trees"
   run "$W/ops/scripts/release.sh" core=minor

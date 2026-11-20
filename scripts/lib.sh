@@ -40,14 +40,16 @@ verify_cmd() { jq -r --arg n "$1" '.checkouts[$n].verify // empty' "$CONFIG"; }
 # and only the tests that name them. Empty: the release always runs `verify`.
 verify_touched_cmd() { jq -r --arg n "$1" '.checkouts[$n].verify_touched // empty' "$CONFIG"; }
 
-# Exit 0 when a green full run left the checkout's current tree in its stamp:
-# one tree hash per line, compared as a whole line.
+# Exit 0 and print the stamp line when the checkout's current tree is in its
+# stamp. A line is a tree a green full run left, or `<tree> via <base>` from a
+# green `verified` run chained to one; the tree is the first field, compared
+# whole.
 tree_verified() {
   local tree stamp
   tree="$(git -C "$1" rev-parse 'HEAD^{tree}')" || return 1
   stamp="$(git -C "$1" rev-parse --path-format=absolute --git-common-dir)/spine-verified-trees" || return 1
   [ -f "$stamp" ] || return 1
-  grep -qxF "$tree" "$stamp"
+  awk -v t="$tree" '$1 == t { print; found = 1; exit } END { exit !found }' "$stamp"
 }
 
 # Files that quote the plugin's own version as a dependency floor and move with it.

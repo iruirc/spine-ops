@@ -144,9 +144,9 @@ than pretending it was. Which plugins exist is not written here — see above.
 
 `verify_touched` runs from the checkout's root too, with the paths of the files the release
 rewrote there — its host manifests and `floor_files`, relative to the checkout. It replaces `verify`
-only when a green full run left the tree being released in the checkout's
-`.git/spine-verified-trees`: that tree already passed everything, and the release changes nothing
-but those files. Leave it out and the release always runs `verify`. The stamp stands in for `verify`
+only when a green full run, or a green `scripts/test-foundation.sh verified` chained to one, left the
+tree being released in the checkout's `.git/spine-verified-trees`: that tree already passed
+everything, and the release changes nothing but those files. Leave it out and the release always runs `verify`. The stamp stands in for `verify`
 only because `verify` is `scripts/test-foundation.sh`, the full `all`; a `verify` that adds other steps
 must not declare `verify_touched`.
 

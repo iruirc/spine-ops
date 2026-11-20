@@ -156,7 +156,8 @@ else
 fi
 
 # --- verified: which suite each plugin's verify step runs ------------------
-# A green full run stamps the tree it ran on. The guards left every checkout
+# A green full run stamps the tree it ran on, and a green `verified` run stamps
+# `<tree> via <base>`, the base a tree stamped before it. The guards left every checkout
 # clean on main, so HEAD's tree is the tree before the release: when it was
 # stamped, only the tests that name the files the release rewrites are left.
 # Decided here, before staging changes the tree.
@@ -168,12 +169,15 @@ while IFS=$'\t' read -r name dir from to kind n; do
   [ -n "$name" ] || continue
   tree="$(git -C "$dir" rev-parse 'HEAD^{tree}')"; tree="${tree:0:7}"
   path=full
-  if tree_verified "$dir"; then
+  if line="$(tree_verified "$dir")"; then
+    how="a full run"
+    read -r _ via base _ <<<"$line"
+    [ "$via" != via ] || how="verified via ${base:0:7}"
     if [ -n "$(verify_touched_cmd "$name")" ]; then
       path=touched
-      note "$name: tree $tree passed a full run — the release runs the tests that name its files"
+      note "$name: tree $tree passed $how — the release runs the tests that name its files"
     else
-      note "$name: tree $tree passed a full run, but no verify_touched is declared — the release runs the full suite"
+      note "$name: tree $tree passed $how, but no verify_touched is declared — the release runs the full suite"
     fi
   else
     note "$name: no full run of tree $tree — the release runs the full suite"
