@@ -1,0 +1,4 @@
+- a FEATURE plan that raises the scale from `lite` to `full` and reports no `estimation_gate` now leaves Plan open with `ask_user`, instead of going on to Execute unchecked; a missing gate counts as blocked, as `conventions/estimation-gate.md` has it. An explicit `[ESTIMATION] = [off]` still needs no gate
+- `agent-metrics.sh`: a phase row carries `untimed`, the agents with no start or no duration, and `--task` gives `untimedStages`. `run-forecast` falls back to the git commit span when it is not empty, as it does for a skipped session, and names the stages in `variance_reason`; such a row is kept out of calibration
+- the skills' frontmatter passes the skill validator: `stack_axes_envelope` moves under `metadata:` in every workflow skill, and the `orchestrator` and `task-new` descriptions write their placeholders as `STAGE`, `STATUS` and `NAME`, without angle brackets
+- no file the platforms vendor changed
