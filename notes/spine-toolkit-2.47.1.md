@@ -1,0 +1,8 @@
+- in `manual`, a step the orchestrator dispatches from an epic's `pending_steps` is asked a question of its own, `confirm_step_dispatch` — "Step X of epic N: … Run it now?" — instead of the dispatch confirmation, whose "No" meant "pick another stage". Options: Run / Change the start stage (`scale_lite_suggest_option` in its place when lite is suggested, so never more than four) / Not now / Close it without a run (SKIPPED)
+- Not now, and Cancel in the stage picker opened from it, end the walk: no later step is dispatched, the epic is not re-dispatched, and `info_step_postponed` says how to go on. The return's reason is `status_step_postponed`, a reason code
+- Close it without a run sets the step to SKIPPED by `task-move`'s step process and offers the next step; after the last, the epic is re-dispatched by State Detection item 4's rule
+- options 3 and 4 and the picker's Cancel delete the step's `Base.md` when Resolution step 5.6 wrote it in the same dispatch
+- the question is asked once per step, before its first stage, and also when the command named profile and mode explicitly
+- option 2 of the ordinary dispatch confirmation reads "Change the start stage" instead of "No, pick a different stage"
+- `runtimes/codex-cli.md` dispatches pending steps the same way and re-dispatches the epic by item 4's rule instead of always at Done
+- no vendored file changed
