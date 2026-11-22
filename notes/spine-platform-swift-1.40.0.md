@@ -1,0 +1,5 @@
+- `swift-validator` writes no `OpsChecklist.md`: a deferred check is a case in `ManualChecks.md` and a title in `manual_checks:`, with no Pending item and no Manual test pass item beside it
+- `swift-reviewer` applies `spine-toolkit:ops-risks` → `## Review` to the diff, and its output template carries `### Ops risks`; `swift-architect` applies its `## Plan`. `release-ops` is resolved when `ops-risks` finds a `release-settings` risk, and `nav-deeplinks` names a changed registered route as its `contract` risk
+- an agent that calls a core script stops the stage when the script or its flag is missing, and does not do the work by hand or take the script from another folder; a script that reports findings is not a core that is too old
+- the vendored `conventions/i18n.md` and `scripts/lint-locales.sh` follow core: Russian strings address the user in the informal form
+- requires spine-toolkit 2.46.0
