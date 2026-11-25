@@ -1,0 +1,4 @@
+- new `scripts/junit-summary.sh <reports-dir>...`: prints `JUnit XML: N tests, F failures, E errors, S skipped in K files` from the `TEST-*.xml` files directly in the named directories, since a green Gradle or Amper run prints no count of its own. A `<testsuites>` root is not counted twice, and a tag inside CDATA is text. Exit 1 with no report, 2 on usage
+- `test-frameworks` has a `## Result line` section: Gradle and Amper run `junit-summary.sh` after the tests under the same `long-run.sh` job, so its line lands in the run's log; Maven's result line is the last `Tests run: N, Failures: F, Errors: E, Skipped: S`
+- the three validators read the `ran:` line in the form spine-toolkit 2.49.0 writes, `tests <N> result "<result line>"`, and in the older `Executed <N>` form
+- works with spine-toolkit 2.46.0 and later; the new `ran:` form comes from 2.49.0
